@@ -1,0 +1,6 @@
+{
+  "name": "Além do Bilhão",
+  "description": "Premium business, investments, technology, and entrepreneurship news portal and administrative CMS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

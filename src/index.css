@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Premium Sophisticated Dark Gold values */
+  --color-gold-50: #FAF7EB;
+  --color-gold-100: #F2E8C4;
+  --color-gold-200: #EAD08C;
+  --color-gold-300: #E2B954;
+  --color-gold-400: #D4AF37; /* Main design gold asset */
+  --color-gold-500: #D4AF37; /* Standard brand luxury accent gold */
+  --color-gold-600: #B8932A;
+  --color-gold-700: #93741F;
+  --color-gold-800: #6F5514;
+  --color-gold-900: #4B390B;
+  --color-gold-950: #271E04;
+
+  /* Luxury Dark System Grey Values */
+  --color-luxury-gray-50: #050505;   /* Body page background background */
+  --color-luxury-gray-100: #0a0a0a;  /* Primary Card backgrounds */
+  --color-luxury-gray-150: #121212;  /* Secondary dividers */
+  --color-luxury-gray-200: #1a1a1a;  /* Thin white borders/subtle dark borders */
+  --color-luxury-gray-205: #1c1c1c;  
+  --color-luxury-gray-250: #222222;  /* Highlight dividers borders */
+  --color-luxury-gray-300: #e5e5e5;  /* Main text description grey/off-white */
+  --color-luxury-gray-400: #a3a3a3;  /* Subdued descriptors */
+  --color-luxury-gray-450: #888888;
+  --color-luxury-gray-500: #a3a3a3;  
+  --color-luxury-gray-650: #171717;  
+  --color-luxury-gray-800: #1a1a1a;  /* Dark frame outlines */
+  --color-luxury-gray-850: #121212;  
+  --color-luxury-gray-900: #0d0d0d;  /* Continuous dark section lines */
+  --color-luxury-gray-950: #000000;  /* Strict administration jet blacks */
+}
+
+@layer utilities {
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #FFFFFF 0%, #D4AF37 50%, #B8932A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8932A 50%, #93741F 100%);
+  }
+
+  .border-gold-gradient {
+    border-image: linear-gradient(135deg, #FFF, #D4AF37, #93741F) 1;
+  }
+}
+
+/* Custom smooth dark layout settings */
+body {
+  font-family: var(--font-sans);
+  background-color: #050505;
+  color: #e5e5e5;
+  margin: 0;
+}
+
+/* Custom premium scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B8932A;
+}
