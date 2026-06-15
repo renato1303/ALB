@@ -73,6 +73,31 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
     return () => clearInterval(interval);
   }, []);
 
+  // Update prices in real-time with tiny realistic market fluctuations every 3 seconds for continuous visual updates
+  useEffect(() => {
+    const simulationInterval = setInterval(() => {
+      setTickerItems(prevItems => 
+        prevItems.map(item => {
+          // Subtle fluctuation between -0.04% and +0.04% for elegant realism
+          const changePercent = (Math.random() * 0.08 - 0.04) / 100;
+          const priceDelta = item.price * changePercent;
+          const newPrice = Math.max(0.01, item.price + priceDelta);
+          const newChange = newPrice - item.prevClose;
+          const newPercentage = item.prevClose !== 0 ? (newChange / item.prevClose) * 100 : 0;
+          
+          return {
+            ...item,
+            price: newPrice,
+            change: newChange,
+            percentage: newPercentage
+          };
+        })
+      );
+    }, 3000);
+
+    return () => clearInterval(simulationInterval);
+  }, []);
+
   const formatPrice = (item: typeof tickerItems[0]) => {
     if (item.isPoints) {
       return Math.round(item.price).toLocaleString('pt-BR');
@@ -144,18 +169,34 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
             <span className="text-[10px] font-black tracking-widest text-gold-400 uppercase">MERCADOS</span>
           </div>
 
-          {/* Scrolling items track */}
-          <div className="flex-1 overflow-x-auto no-scrollbar py-0.5 flex items-center gap-6 scroll-smooth">
-            {tickerItems.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-center gap-2.5 text-[11px] shrink-0 border-r border-luxury-gray-850/70 pr-6 last:border-r-0"
-              >
-                <span className="text-luxury-gray-300 font-bold uppercase">{item.label}:</span>
-                <span className="text-white font-extrabold font-mono">{formatPrice(item)}</span>
-                {renderTrend(item.percentage)}
-              </div>
-            ))}
+          {/* Scrolling items track (Infinite Marquee) */}
+          <div className="flex-1 overflow-hidden relative flex items-center">
+            <div className="flex items-center gap-8 animate-marquee whitespace-nowrap hover:[animation-play-state:paused] min-w-max">
+              {/* Loop 1 of ticker items */}
+              {tickerItems.map((item, idx) => (
+                <div
+                  key={`t1-${idx}`}
+                  className="flex items-center gap-2.5 text-[11px] shrink-0"
+                >
+                  <span className="text-luxury-gray-400 font-bold uppercase">{item.label}:</span>
+                  <span className="text-white font-extrabold font-mono transition-all duration-300">{formatPrice(item)}</span>
+                  {renderTrend(item.percentage)}
+                  <span className="text-luxury-gray-800/80 ml-3 select-none font-sans">|</span>
+                </div>
+              ))}
+              {/* Loop 2 of ticker items (Seamless transition copy) */}
+              {tickerItems.map((item, idx) => (
+                <div
+                  key={`t2-${idx}`}
+                  className="flex items-center gap-2.5 text-[11px] shrink-0"
+                >
+                  <span className="text-luxury-gray-400 font-bold uppercase">{item.label}:</span>
+                  <span className="text-white font-extrabold font-mono transition-all duration-300">{formatPrice(item)}</span>
+                  {renderTrend(item.percentage)}
+                  <span className="text-luxury-gray-800/80 ml-3 select-none font-sans">|</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right Status */}
