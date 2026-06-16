@@ -50,6 +50,13 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [likesCount, setLikesCount] = useState(Math.floor(Math.random() * 120) + 40);
   const [liked, setLiked] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
+
+  const handleShareSimulation = (platform: string) => {
+    navigator.clipboard.writeText(window.location.href);
+    setShareFeedback(`Link copiado! Compartilhe o relatório no seu ${platform}.`);
+    setTimeout(() => setShareFeedback(null), 3500);
+  };
 
   // Load contextual relative nodes
   useEffect(() => {
@@ -215,21 +222,21 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
           <div className="lg:col-span-1 hidden lg:flex flex-col items-center gap-5 sticky top-28">
             <span className="text-[10px] font-mono font-bold text-luxury-gray-400 uppercase tracking-widest leading-none mb-1">Social</span>
             <button
-              onClick={() => alert('Compartilhado no Facebook empresarial')}
+              onClick={() => handleShareSimulation('Facebook')}
               className="w-8 h-8 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-sky-700 hover:border-sky-705 transition duration-300 transform hover:scale-110 shadow-sm"
               aria-label="Facebook share"
             >
               <Facebook size={14} />
             </button>
             <button
-              onClick={() => alert('Compartilhado no Twitter Corporativo')}
+              onClick={() => handleShareSimulation('Twitter')}
               className="w-8 h-8 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-neutral-800 hover:border-neutral-850 transition duration-300 transform hover:scale-110 shadow-sm"
               aria-label="Twitter share"
             >
               <Twitter size={14} />
             </button>
             <button
-              onClick={() => alert('Compartilhado no Linkedin Executivo')}
+              onClick={() => handleShareSimulation('LinkedIn')}
               className="w-8 h-8 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-blue-800 hover:border-blue-850 transition duration-300 transform hover:scale-110 shadow-sm"
               aria-label="Linkedin share"
             >
@@ -328,6 +335,41 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
                 </div>
               </div>
             )}
+
+            {/* MOBILE ONLY RESPONSIVE SHARE ROW */}
+            <div className="lg:hidden mt-8 p-4 bg-luxury-gray-100/30 rounded-xl border border-luxury-gray-200 flex flex-col items-center gap-3">
+              <span className="text-[10px] font-mono font-bold text-luxury-gray-400 uppercase tracking-widest leading-none">Compartilhar Artigo</span>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => handleShareSimulation('Facebook')}
+                  className="w-10 h-10 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-sky-700 transition"
+                >
+                  <Facebook size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleShareSimulation('Twitter')}
+                  className="w-10 h-10 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-neutral-800 transition"
+                >
+                  <Twitter size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleShareSimulation('LinkedIn')}
+                  className="w-10 h-10 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-blue-800 transition"
+                >
+                  <Linkedin size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCopyLink}
+                  className="w-10 h-10 rounded-full bg-luxury-gray-100 border border-luxury-gray-200 flex items-center justify-center text-luxury-gray-300 hover:text-white hover:bg-gold-500 transition"
+                >
+                  {copiedLink ? <Check size={16} className="text-emerald-500" /> : <Copy size={15} />}
+                </button>
+              </div>
+            </div>
 
           </div>
 
@@ -470,6 +512,13 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
         </div>
 
       </div>
+
+      {shareFeedback && (
+        <div className="fixed bottom-6 right-6 z-50 bg-luxury-gray-950 border border-gold-500/20 text-white rounded-xl px-5 py-3.5 shadow-2xl flex items-center gap-3 animate-pulse font-sans">
+          <Sparkles className="text-gold-400 shrink-0 animate-spin" size={16} />
+          <span className="text-xs font-medium font-serif tracking-tight text-white">{shareFeedback}</span>
+        </div>
+      )}
     </article>
   );
 }

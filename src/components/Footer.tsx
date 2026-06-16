@@ -13,6 +13,7 @@ interface FooterProps {
 export default function Footer({ onNavigate }: FooterProps) {
   const [emailInput, setEmailInput] = useState('');
   const [success, setSuccess] = useState(false);
+  const [activeInfo, setActiveInfo] = useState<string | null>(null);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,13 +126,13 @@ export default function Footer({ onNavigate }: FooterProps) {
           <h4 className="text-gold-400 font-serif font-semibold tracking-wider uppercase text-[10px]">Mecanismos de busca (SEO)</h4>
           <ul className="flex flex-col gap-2 font-medium font-mono text-[11px]">
             <li 
-              onClick={() => alert('Sitemap gerado dinamicamente para indexação do ecossistema Google Search Console.')}
+              onClick={() => setActiveInfo('sitemap')}
               className="hover:text-white cursor-pointer transition flex items-center gap-1 filter grayscale active:grayscale-0"
             >
               <span>/sitemap.xml</span>
             </li>
             <li 
-              onClick={() => alert('User-agent: *\nDisallow: /admin\nAllow: /')}
+              onClick={() => setActiveInfo('robots')}
               className="hover:text-white cursor-pointer transition flex items-center gap-1"
             >
               <span>/robots.txt</span>
@@ -170,6 +171,35 @@ export default function Footer({ onNavigate }: FooterProps) {
           <span className="hover:text-luxury-gray-400 cursor-pointer transition">Termos de Uso Corporativo</span>
         </div>
       </div>
+
+      {activeInfo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in font-sans">
+          <div className="bg-luxury-gray-900 border border-luxury-gray-850 rounded-xl p-6 max-w-md w-full shadow-2xl space-y-4 text-left">
+            <div className="flex items-center justify-between text-gold-400 font-serif font-semibold border-b border-luxury-gray-850 pb-3">
+              <span className="text-white text-sm font-bold tracking-tight uppercase">
+                {activeInfo === 'sitemap' ? 'Sitemap XML Automático' : 'Robots.txt Schema'}
+              </span>
+              <button 
+                onClick={() => setActiveInfo(null)}
+                className="text-luxury-gray-400 hover:text-white text-xs px-2.5 py-1.5 rounded bg-luxury-gray-950 transition font-mono border border-luxury-gray-800"
+              >
+                Fechar
+              </button>
+            </div>
+            
+            <div className="text-xs text-emerald-400 font-mono leading-relaxed whitespace-pre bg-luxury-gray-950 p-4 rounded-lg overflow-x-auto border border-luxury-gray-850 max-h-[180px]">
+              {activeInfo === 'sitemap' 
+                ? `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>https://alemdobilhao.com.br/</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n  <!-- URLs corporativas indexadas em tempo real -->\n</urlset>`
+                : `User-agent: *\nDisallow: /admin\nAllow: /\n\n# Sitemap indexation rule\nSitemap: https://alemdobilhao.com.br/sitemap.xml`
+              }
+            </div>
+            
+            <p className="text-[10px] text-luxury-gray-400 leading-normal">
+              Este arquivo de configuração é gerado dinamicamente pela infraestrutura SEO consolidada do portal Além do Bilhão para maximizar o alcance editorial orgânico no Google Search Console.
+            </p>
+          </div>
+        </div>
+      )}
 
     </footer>
   );

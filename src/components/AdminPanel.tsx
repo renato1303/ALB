@@ -84,6 +84,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
   // Session states
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Login Form states
   const [email, setEmail] = useState('contatolinkagencia@gmail.com'); // Prefilled for instant developer eval
@@ -617,8 +618,37 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
   return (
     <div className="min-h-screen bg-luxury-gray-950 text-luxury-gray-100 flex flex-col lg:flex-row font-sans">
       
+      {/* Mobile Header Bar for CMS */}
+      <div className="lg:hidden bg-luxury-gray-950 border-b border-luxury-gray-900 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center gap-2" onClick={() => onNavigate('home')}>
+          <div className="font-serif font-black tracking-widest text-xs uppercase text-white leading-none">
+            A. B. <span className="text-gold-gradient font-bold font-serif">CMS</span>
+          </div>
+          <span className="bg-luxury-gray-900 border border-luxury-gray-850 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold text-gold-500">
+            v1.4
+          </span>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] bg-luxury-gray-900 border border-luxury-gray-850 px-2 py-1 rounded text-gold-400 font-mono">
+            {activeTab === 'dashboard' ? 'DASHBOARD' :
+             activeTab === 'posts' ? 'ARTIGOS' :
+             activeTab === 'categories' ? 'CATEGORIAS' :
+             activeTab === 'comments' ? 'COMENTÁRIOS' :
+             activeTab === 'media' ? 'MÍDIA' :
+             activeTab === 'users' ? 'USUÁRIOS' : 'SQL'}
+          </span>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-1 px-2.5 bg-luxury-gray-900 hover:bg-luxury-gray-850 text-luxury-gray-300 rounded border border-luxury-gray-850 text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition"
+          >
+            {mobileMenuOpen ? 'Fechar' : 'Menu'}
+          </button>
+        </div>
+      </div>
+      
       {/* SIDEBAR NAVIGATION CONTROL */}
-      <aside className="w-full lg:w-64 bg-luxury-gray-950 border-r border-luxury-gray-900 shrink-0 flex flex-col justify-between">
+      <aside className={`w-full lg:w-64 bg-luxury-gray-950 border-r border-luxury-gray-900 shrink-0 flex flex-col justify-between ${mobileMenuOpen ? 'flex' : 'hidden lg:flex'}`}>
         <div className="p-4 md:p-6">
           
           {/* Logo brand */}
@@ -661,7 +691,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
           {/* ACTION BUTTON LINKS */}
           <nav className="flex flex-col gap-1 text-xs">
             <button
-              onClick={() => { setActiveTab('dashboard'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('dashboard'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'dashboard' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -671,7 +701,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </button>
 
             <button
-              onClick={() => { setActiveTab('posts'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('posts'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'posts' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -684,7 +714,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </button>
 
             <button
-              onClick={() => { setActiveTab('categories'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('categories'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'categories' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -694,7 +724,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </button>
 
             <button
-              onClick={() => { setActiveTab('comments'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('comments'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'comments' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -709,7 +739,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </button>
 
             <button
-              onClick={() => { setActiveTab('media'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('media'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'media' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -721,7 +751,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             <span className="text-[10px] font-mono font-bold text-luxury-gray-500 uppercase tracking-widest block mt-6 mb-3">Sistemas</span>
 
             <button
-              onClick={() => { setActiveTab('users'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('users'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'users' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -731,7 +761,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </button>
 
             <button
-              onClick={() => { setActiveTab('db-inspector'); setEditingPost(null); }}
+              onClick={() => { setActiveTab('db-inspector'); setEditingPost(null); setMobileMenuOpen(false); }}
               className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
                 activeTab === 'db-inspector' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
               }`}
@@ -1346,41 +1376,43 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
 
               {/* LISTING COLS */}
               <div className="lg:col-span-8 bg-luxury-gray-900 rounded-xl border border-luxury-gray-850 overflow-hidden shadow">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="bg-luxury-gray-950 text-luxury-gray-400 font-mono uppercase tracking-wider text-[10px] border-b border-luxury-gray-850">
-                      <th className="p-4">Nome</th>
-                      <th className="p-4">Slug (URL amigável)</th>
-                      <th className="p-4">Descrição</th>
-                      <th className="p-4 text-right">Ação</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-luxury-gray-850">
-                    {categories.map(cat => (
-                      <tr key={cat.id} className="hover:bg-luxury-gray-850/40 transition">
-                        <td className="p-4 font-bold text-white font-serif">{cat.name}</td>
-                        <td className="p-4 text-luxury-gray-400 font-mono text-[11px]">/{cat.slug}</td>
-                        <td className="p-4 text-luxury-gray-300 max-w-sm shrink leading-relaxed truncate">{cat.description}</td>
-                        <td className="p-4 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <button
-                              onClick={() => setEditingCategory(cat)}
-                              className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-gold-400 rounded transition"
-                            >
-                              <Edit2 size={12} />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteCategory(cat.id)}
-                              className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-rose-400 rounded transition hover:bg-rose-950/20"
-                            >
-                              <Trash2 size={12} />
-                            </button>
-                          </div>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="bg-luxury-gray-950 text-luxury-gray-400 font-mono uppercase tracking-wider text-[10px] border-b border-luxury-gray-850">
+                        <th className="p-4">Nome</th>
+                        <th className="p-4">Slug (URL amigável)</th>
+                        <th className="p-4">Descrição</th>
+                        <th className="p-4 text-right">Ação</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-luxury-gray-850">
+                      {categories.map(cat => (
+                        <tr key={cat.id} className="hover:bg-luxury-gray-850/40 transition">
+                          <td className="p-4 font-bold text-white font-serif">{cat.name}</td>
+                          <td className="p-4 text-luxury-gray-400 font-mono text-[11px]">/{cat.slug}</td>
+                          <td className="p-4 text-luxury-gray-300 max-w-sm shrink leading-relaxed truncate">{cat.description}</td>
+                          <td className="p-4 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                onClick={() => setEditingCategory(cat)}
+                                className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-gold-400 rounded transition"
+                              >
+                                <Edit2 size={12} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteCategory(cat.id)}
+                                className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-rose-400 rounded transition hover:bg-rose-950/20"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
             </div>
@@ -1398,70 +1430,72 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </div>
 
             <div className="bg-luxury-gray-900 rounded-xl border border-luxury-gray-850 overflow-hidden shadow">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="bg-luxury-gray-950 text-luxury-gray-400 font-mono uppercase tracking-wider text-[10px] border-b border-luxury-gray-850">
-                    <th className="p-4">Leitor</th>
-                    <th className="p-4">Artigo Relacionado</th>
-                    <th className="p-4">Manifestação (Conteúdo)</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4 text-right">Decisões</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-luxury-gray-850">
-                  {comments.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="p-8 text-center text-luxury-gray-500 italic">
-                        Não há manifestações ou comentários reportados.
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="bg-luxury-gray-950 text-luxury-gray-400 font-mono uppercase tracking-wider text-[10px] border-b border-luxury-gray-850">
+                      <th className="p-4">Leitor</th>
+                      <th className="p-4">Artigo Relacionado</th>
+                      <th className="p-4">Manifestação (Conteúdo)</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4 text-right">Decisões</th>
                     </tr>
-                  ) : (
-                    comments.map(comment => {
-                      const relPost = posts.find(p => p.id === comment.postId);
-                      return (
-                        <tr key={comment.id} className="hover:bg-luxury-gray-850/40 transition">
-                          <td className="p-4 font-sans">
-                            <h4 className="font-bold text-white text-[12px]">{comment.authorName}</h4>
-                            <span className="text-[10px] text-luxury-gray-400 font-mono">{comment.authorEmail}</span>
-                          </td>
-                          <td className="p-4 max-w-xs font-serif italic text-luxury-gray-300 truncate">
-                            {relPost ? relPost.title : 'Artigo não localizado'}
-                          </td>
-                          <td className="p-4 text-luxury-gray-300 max-w-sm whitespace-pre-wrap leading-relaxed">
-                            {comment.content}
-                          </td>
-                          <td className="p-4">
-                            <span className={`inline-block px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase ${
-                              comment.status === 'approved' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/10' : 'bg-amber-950 text-amber-400 border border-amber-600/10 animate-pulse'
-                            }`}>
-                              {comment.status === 'approved' ? 'Aprovado' : 'Aguardando'}
-                            </span>
-                          </td>
-                          <td className="p-4 text-right">
-                            <div className="flex items-center justify-end gap-1.5">
-                              {comment.status === 'pending' && (
+                  </thead>
+                  <tbody className="divide-y divide-luxury-gray-850">
+                    {comments.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="p-8 text-center text-luxury-gray-500 italic">
+                          Não há manifestações ou comentários reportados.
+                        </td>
+                      </tr>
+                    ) : (
+                      comments.map(comment => {
+                        const relPost = posts.find(p => p.id === comment.postId);
+                        return (
+                          <tr key={comment.id} className="hover:bg-luxury-gray-850/40 transition">
+                            <td className="p-4 font-sans">
+                              <h4 className="font-bold text-white text-[12px]">{comment.authorName}</h4>
+                              <span className="text-[10px] text-luxury-gray-400 font-mono">{comment.authorEmail}</span>
+                            </td>
+                            <td className="p-4 max-w-xs font-serif italic text-luxury-gray-300 truncate">
+                              {relPost ? relPost.title : 'Artigo não localizado'}
+                            </td>
+                            <td className="p-4 text-luxury-gray-300 max-w-sm whitespace-pre-wrap leading-relaxed">
+                              {comment.content}
+                            </td>
+                            <td className="p-4">
+                              <span className={`inline-block px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase ${
+                                comment.status === 'approved' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/10' : 'bg-amber-950 text-amber-400 border border-amber-600/10 animate-pulse'
+                              }`}>
+                                {comment.status === 'approved' ? 'Aprovado' : 'Aguardando'}
+                              </span>
+                            </td>
+                            <td className="p-4 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                {comment.status === 'pending' && (
+                                  <button
+                                    onClick={() => handleApproveComment(comment.id)}
+                                    className="px-2.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-[10px] font-bold uppercase transition"
+                                  >
+                                    Aprovar
+                                  </button>
+                                )}
                                 <button
-                                  onClick={() => handleApproveComment(comment.id)}
-                                  className="px-2.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-[10px] font-bold uppercase transition"
+                                  onClick={() => handleDeleteComment(comment.id)}
+                                  className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-rose-400 rounded transition hover:bg-rose-950/20"
+                                  title="Excluir"
                                 >
-                                  Aprovar
+                                  <Trash2 size={12} />
                                 </button>
-                              )}
-                              <button
-                                onClick={() => handleDeleteComment(comment.id)}
-                                className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-rose-400 rounded transition hover:bg-rose-950/20"
-                                title="Excluir"
-                              >
-                                <Trash2 size={12} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -1708,55 +1742,57 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
 
                 {/* GRID DISPLAY */}
                 <div className="lg:col-span-8 bg-luxury-gray-900 rounded-xl border border-luxury-gray-850 overflow-hidden shadow">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="bg-luxury-gray-950 text-luxury-gray-400 font-mono uppercase tracking-wider text-[10px] border-b border-luxury-gray-850">
-                        <th className="p-4">Colaborador</th>
-                        <th className="p-4">Credencial (Cargo)</th>
-                        <th className="p-4">Descritivo Biográfico</th>
-                        <th className="p-4">Permissões</th>
-                        <th className="p-4 text-right">Controles</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-luxury-gray-850">
-                      {users.map(u => (
-                        <tr key={u.id} className="hover:bg-luxury-gray-850/40 transition">
-                          <td className="p-4 flex items-center gap-2.5">
-                            <img src={u.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover border border-gold-400 shrink-0" />
-                            <div>
-                              <h4 className="font-bold text-white leading-none">{u.name}</h4>
-                              <span className="text-[10px] text-luxury-gray-400 block mt-1">{u.email}</span>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-[11px] font-mono font-semibold text-gold-400">{u.role}</span>
-                          </td>
-                          <td className="p-4 text-luxury-gray-300 max-w-xxs truncate leading-relaxed">
-                            {u.bio || 'Sem biografia.'}
-                          </td>
-                          <td className="p-4 text-luxury-gray-400">
-                            {u.role === 'Super Admin' ? 'Tudo' : u.role === 'Editor' ? 'Publicações' : 'Apenas Próprios'}
-                          </td>
-                          <td className="p-4 text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <button
-                                onClick={() => setEditingUser(u)}
-                                className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-gold-400 rounded transition"
-                              >
-                                <Edit2 size={12} />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteUser(u.id)}
-                                className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-rose-450 rounded transition hover:bg-rose-950/20"
-                              >
-                                <Trash2 size={12} />
-                              </button>
-                            </div>
-                          </td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="bg-luxury-gray-950 text-luxury-gray-400 font-mono uppercase tracking-wider text-[10px] border-b border-luxury-gray-850">
+                          <th className="p-4">Colaborador</th>
+                          <th className="p-4">Credencial (Cargo)</th>
+                          <th className="p-4">Descritivo Biográfico</th>
+                          <th className="p-4">Permissões</th>
+                          <th className="p-4 text-right">Controles</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-luxury-gray-850">
+                        {users.map(u => (
+                          <tr key={u.id} className="hover:bg-luxury-gray-850/40 transition">
+                            <td className="p-4 flex items-center gap-2.5">
+                              <img src={u.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover border border-gold-400 shrink-0" />
+                              <div>
+                                <h4 className="font-bold text-white leading-none">{u.name}</h4>
+                                <span className="text-[10px] text-luxury-gray-400 block mt-1">{u.email}</span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-[11px] font-mono font-semibold text-gold-400">{u.role}</span>
+                            </td>
+                            <td className="p-4 text-luxury-gray-300 max-w-xxs truncate leading-relaxed">
+                              {u.bio || 'Sem biografia.'}
+                            </td>
+                            <td className="p-4 text-luxury-gray-400">
+                              {u.role === 'Super Admin' ? 'Tudo' : u.role === 'Editor' ? 'Publicações' : 'Apenas Próprios'}
+                            </td>
+                            <td className="p-4 text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <button
+                                  onClick={() => setEditingUser(u)}
+                                  className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-gold-400 rounded transition"
+                                >
+                                  <Edit2 size={12} />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteUser(u.id)}
+                                  className="p-1.5 bg-luxury-gray-950 text-luxury-gray-400 hover:text-rose-450 rounded transition hover:bg-rose-950/20"
+                                >
+                                  <Trash2 size={12} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
               </div>
