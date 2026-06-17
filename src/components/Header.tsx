@@ -298,7 +298,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
       {/* 3. DESKTOP NAVIGATION MENU */}
       <nav className="w-full bg-luxury-gray-950 border-t border-luxury-gray-900 hidden lg:block">
         <div className="max-w-7xl mx-auto px-8">
-          <ul className="flex items-center justify-between text-xs font-semibold text-luxury-gray-300 tracking-wider uppercase font-sans py-3">
+          <ul className="flex flex-wrap items-center justify-center lg:justify-between gap-x-4 gap-y-2 lg:gap-x-0 text-xs font-semibold text-luxury-gray-300 tracking-wider uppercase font-sans py-3 text-center">
             <li 
               onClick={() => { onNavigate('home'); onSearch(''); }}
               className={`hover:text-gold-400 transition cursor-pointer py-1 ${activeView === 'home' && !activeCategorySlug ? 'text-gold-400 border-b-2 border-gold-500' : ''}`}

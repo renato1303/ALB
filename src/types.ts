@@ -36,6 +36,7 @@ export interface Post {
   publishedAt: string;
   createdAt: string;
   readingTime: number; // calculated in minutes
+  layoutPosition?: 'esquerda' | 'direita' | 'meio' | 'maior' | 'menor';
 }
 
 export interface Category {

@@ -162,9 +162,36 @@ export default function App() {
     ? categories.find(c => c.slug === viewParam) 
     : null;
 
-  // Split calculations for Home Page structure
-  const featuredPost = searchedPosts[0]; // Primary large hero
-  const secondaryPosts = searchedPosts.slice(1, 4); // Grid of secondary posts
+  // --- CUSTOM ADAPTIVE PORTAL LAYOUT RESOLVER ---
+  // 1. Identify the 'maior' featured article (Hero). If none labeled as 'maior' exists, fall back to first article in list.
+  const featuredPost = searchedPosts.find(p => p.layoutPosition === 'maior') || searchedPosts[0];
+
+  // 2. Filter other articles excluding the main hero
+  const otherPosts = searchedPosts.filter(p => p.id !== featuredPost?.id);
+
+  // 3. Collect explicit lane designations
+  const explicitLeft = otherPosts.filter(p => p.layoutPosition === 'esquerda');
+  const explicitCenter = otherPosts.filter(p => p.layoutPosition === 'meio');
+  const explicitRight = otherPosts.filter(p => p.layoutPosition === 'direita');
+  const explicitMinor = otherPosts.filter(p => p.layoutPosition === 'menor');
+
+  // Any other post with unassigned / default layouts will be auto-distributed evenly across left, center, right to keep layout visually rich
+  const unassignedHomePosts = otherPosts.filter(p => !p.layoutPosition || !['esquerda', 'meio', 'direita', 'menor', 'maior'].includes(p.layoutPosition));
+
+  const finalLeft: typeof searchedPosts = [...explicitLeft];
+  const finalCenter: typeof searchedPosts = [...explicitCenter];
+  const finalRight: typeof searchedPosts = [...explicitRight];
+  const finalMinor: typeof searchedPosts = [...explicitMinor];
+
+  unassignedHomePosts.forEach((post, index) => {
+    if (index % 3 === 0) {
+      finalLeft.push(post);
+    } else if (index % 3 === 1) {
+      finalCenter.push(post);
+    } else {
+      finalRight.push(post);
+    }
+  });
   
   // Categorized sections displays
   const negociosPosts = publishedPosts.filter(p => p.categoryId === 'cat_1').slice(0, 3);
@@ -236,7 +263,7 @@ export default function App() {
                   />
                   {/* Category tag bubble overlay */}
                   <div className="absolute top-4 left-4 bg-luxury-gray-950 font-bold font-mono tracking-[0.2em] text-[10px] text-gold-400 px-3 py-1.5 rounded uppercase shadow-lg border border-gold-550/25">
-                    Destaque Principal
+                    {featuredPost.layoutPosition === 'maior' ? '★ Destaque Principal (Maior)' : 'Destaque Principal'}
                   </div>
                 </div>
 
@@ -271,53 +298,183 @@ export default function App() {
               </div>
             )}
 
-            {/* 2. AUXILIARY CARD GRID */}
-            {secondaryPosts.length > 0 && (
+            {/* 2. THE CUSTOM THREE-COLUMN EDITORIAL PANELS (Esquerda | Meio | Direita) */}
+            {(finalLeft.length > 0 || finalCenter.length > 0 || finalRight.length > 0) && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-luxury-gray-200 pb-2.5">
                   <div className="flex items-center gap-1.5">
                     <BookOpen size={16} className="text-gold-400" />
-                    <h3 className="font-serif font-black text-sm md:text-base text-white uppercase tracking-widest">Análises Relevantes</h3>
+                    <h3 className="font-serif font-black text-sm md:text-base text-white uppercase tracking-widest">Painel Editorial Distribuído</h3>
                   </div>
-                  <span className="text-[10px] font-mono tracking-wider text-luxury-gray-400 uppercase">Foco e Estratégia</span>
+                  <span className="text-[10px] font-mono tracking-wider text-luxury-gray-400 uppercase">Esquerda • Meio • Direita</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {secondaryPosts.map(post => (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* LEFT COLUMN */}
+                  <div className="space-y-6 lg:border-r lg:border-luxury-gray-200/40 lg:pr-6">
+                    <div className="flex items-center gap-2 border-b border-luxury-gray-200/20 pb-2 mb-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-400"></span>
+                      <h4 className="font-mono text-[10px] font-black uppercase text-luxury-gray-300 tracking-wider">Coluna Esquerda</h4>
+                    </div>
+                    {finalLeft.length === 0 ? (
+                      <p className="text-xs text-luxury-gray-400 italic">Sem artigos nesta coluna.</p>
+                    ) : (
+                      finalLeft.map(post => (
+                        <div 
+                          key={post.id}
+                          onClick={() => handleNavigate('article', post.slug)}
+                          className="group cursor-pointer space-y-3 block bg-luxury-gray-100/30 hover:bg-luxury-gray-100/60 p-4 border border-luxury-gray-200/40 rounded-xl transition duration-300"
+                        >
+                          <div className="aspect-video w-full overflow-hidden relative rounded-lg">
+                            <img 
+                              src={post.imageUrl} 
+                              alt="" 
+                              className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
+                              referrerPolicy="no-referrer"
+                            />
+                            <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
+                              {getPostCategoryName(post.categoryId)}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <h5 className="font-serif font-bold text-sm text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
+                              {post.title}
+                            </h5>
+                            <p className="text-[11px] text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
+                              {post.summary}
+                            </p>
+                          </div>
+                          <div className="flex items-center justify-between text-[9px] font-mono text-luxury-gray-400 border-t border-luxury-gray-200/20 pt-2 mt-2">
+                            <span className="text-gold-400/80 uppercase tracking-widest text-[8px] font-bold">[ Esquerda ]</span>
+                            <span>{post.readingTime} min</span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* CENTER COLUMN */}
+                  <div className="space-y-6 lg:border-r lg:border-luxury-gray-200/40 lg:pr-6">
+                    <div className="flex items-center gap-2 border-b border-luxury-gray-200/20 pb-2 mb-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span>
+                      <h4 className="font-mono text-[10px] font-black uppercase text-luxury-gray-300 tracking-wider">Coluna Central (Meio)</h4>
+                    </div>
+                    {finalCenter.length === 0 ? (
+                      <p className="text-xs text-luxury-gray-400 italic">Sem artigos nesta coluna.</p>
+                    ) : (
+                      finalCenter.map(post => (
+                        <div 
+                          key={post.id}
+                          onClick={() => handleNavigate('article', post.slug)}
+                          className="group cursor-pointer space-y-3 block bg-luxury-gray-100/30 hover:bg-luxury-gray-100/60 p-4 border border-luxury-gray-200/40 rounded-xl transition duration-300"
+                        >
+                          <div className="aspect-video w-full overflow-hidden relative rounded-lg">
+                            <img 
+                              src={post.imageUrl} 
+                              alt="" 
+                              className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
+                              referrerPolicy="no-referrer"
+                            />
+                            <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
+                              {getPostCategoryName(post.categoryId)}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <h5 className="font-serif font-bold text-sm text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
+                              {post.title}
+                            </h5>
+                            <p className="text-[11px] text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
+                              {post.summary}
+                            </p>
+                          </div>
+                          <div className="flex items-center justify-between text-[9px] font-mono text-luxury-gray-400 border-t border-luxury-gray-200/20 pt-2 mt-2">
+                            <span className="text-gold-400/80 uppercase tracking-widest text-[8px] font-bold">[ Centro ]</span>
+                            <span>{post.readingTime} min</span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* RIGHT COLUMN */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2 border-b border-luxury-gray-200/20 pb-2 mb-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-400"></span>
+                      <h4 className="font-mono text-[10px] font-black uppercase text-luxury-gray-300 tracking-wider">Coluna Direita</h4>
+                    </div>
+                    {finalRight.length === 0 ? (
+                      <p className="text-xs text-luxury-gray-400 italic">Sem artigos nesta coluna.</p>
+                    ) : (
+                      finalRight.map(post => (
+                        <div 
+                          key={post.id}
+                          onClick={() => handleNavigate('article', post.slug)}
+                          className="group cursor-pointer space-y-3 block bg-luxury-gray-100/30 hover:bg-luxury-gray-100/60 p-4 border border-luxury-gray-200/40 rounded-xl transition duration-300"
+                        >
+                          <div className="aspect-video w-full overflow-hidden relative rounded-lg">
+                            <img 
+                              src={post.imageUrl} 
+                              alt="" 
+                              className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
+                              referrerPolicy="no-referrer"
+                            />
+                            <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
+                              {getPostCategoryName(post.categoryId)}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <h5 className="font-serif font-bold text-sm text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
+                              {post.title}
+                            </h5>
+                            <p className="text-[11px] text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
+                              {post.summary}
+                            </p>
+                          </div>
+                          <div className="flex items-center justify-between text-[9px] font-mono text-luxury-gray-400 border-t border-luxury-gray-200/20 pt-2 mt-2">
+                            <span className="text-gold-400/80 uppercase tracking-widest text-[8px] font-bold">[ Direita ]</span>
+                            <span>{post.readingTime} min</span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 3. MINOR SPECIAL FEED (Destaque Menor) */}
+            {finalMinor.length > 0 && (
+              <div className="space-y-6 pt-6">
+                <div className="flex items-center justify-between border-b border-luxury-gray-200 pb-2.5">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles size={15} className="text-gold-400 animate-spin" />
+                    <h3 className="font-serif font-black text-sm md:text-base text-white uppercase tracking-widest">Destaques Menores / Leituras Rápidas</h3>
+                  </div>
+                  <span className="text-[10px] font-mono tracking-wider text-gold-400 uppercase font-black">Fast Read</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {finalMinor.map(post => (
                     <div 
                       key={post.id}
                       onClick={() => handleNavigate('article', post.slug)}
-                      className="group bg-luxury-gray-100 border border-luxury-gray-200 hover:border-gold-400/40 rounded-lg overflow-hidden cursor-pointer hover:shadow-[0_0_20px_rgba(212,175,55,0.06)] transition-all duration-300 flex flex-col justify-between"
+                      className="group cursor-pointer p-3.5 bg-luxury-gray-900 border border-luxury-gray-850 hover:border-gold-400/30 rounded-lg transition flex flex-col justify-between space-y-2.5"
                     >
-                      <div className="aspect-video w-full overflow-hidden relative">
-                        <img 
-                          src={post.imageUrl} 
-                          alt="" 
-                          className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
-                          referrerPolicy="no-referrer"
-                        />
-                        <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
+                      <div className="space-y-1.5">
+                        <span className="text-[8px] font-mono text-gold-400 uppercase tracking-widest bg-luxury-gray-950 px-2 py-0.5 rounded border border-white/5">
                           {getPostCategoryName(post.categoryId)}
                         </span>
+                        <h5 className="font-serif font-semibold text-xs text-white leading-normal group-hover:text-gold-400 line-clamp-2 transition mt-1.5 font-bold">
+                          {post.title}
+                        </h5>
+                        <p className="text-[10px] text-luxury-gray-400 line-clamp-2 leading-relaxed">
+                          {post.summary}
+                        </p>
                       </div>
-                      
-                      <div className="p-5 flex-1 flex flex-col justify-between">
-                        <div className="space-y-2">
-                          <h4 className="font-serif font-bold text-[15px] md:text-[16px] text-white leading-snug group-hover:text-gold-400 transition italic truncate-2-lines line-clamp-2">
-                            {post.title}
-                          </h4>
-                          <p className="text-[12px] text-luxury-gray-300 leading-relaxed line-clamp-2 font-sans">
-                            {post.summary}
-                          </p>
-                        </div>
-
-                        <div className="border-t border-luxury-gray-200 pt-3.5 mt-5 flex items-center justify-between text-[10px] font-mono text-luxury-gray-400">
-                          <span>{formatDateStr(post.publishedAt || post.createdAt)}</span>
-                          <span>•</span>
-                          <span>{post.readingTime} min</span>
-                        </div>
+                      <div className="text-[8px] font-mono text-luxury-gray-500 flex items-center justify-between pt-1 border-t border-luxury-gray-850 animate-pulse">
+                        <span>Leitura: {post.readingTime} min</span>
+                        <span className="text-gold-400 font-bold uppercase">[ Menor ]</span>
                       </div>
-
                     </div>
                   ))}
                 </div>

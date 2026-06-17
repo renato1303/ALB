@@ -198,7 +198,8 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
       imageUrl: mediaFiles[0]?.url || '',
       status: 'draft',
       tags: [],
-      videoUrl: ''
+      videoUrl: '',
+      layoutPosition: 'meio'
     };
     setEditingPost(newDraft);
   };
@@ -225,7 +226,8 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
       imageUrl: editingPost.imageUrl || '',
       videoUrl: editingPost.videoUrl || '',
       status: editingPost.status || 'draft',
-      tags: editingPost.tags || []
+      tags: editingPost.tags || [],
+      layoutPosition: editingPost.layoutPosition || 'meio'
     });
 
     setEditingPost(null);
@@ -966,6 +968,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                       <th className="p-4">Capa</th>
                       <th className="p-4">Título do Artigo</th>
                       <th className="p-4">Categoria</th>
+                      <th className="p-4">Posição</th>
                       <th className="p-4">Autor</th>
                       <th className="p-4">Views</th>
                       <th className="p-4">Status</th>
@@ -975,7 +978,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                   <tbody className="divide-y divide-luxury-gray-850">
                     {filteredPosts.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="p-8 text-center text-luxury-gray-500 italic">
+                        <td colSpan={8} className="p-8 text-center text-luxury-gray-500 italic">
                           Nenhum artigo encontrado. Tente redefinir os parâmetros de pesquisa.
                         </td>
                       </tr>
@@ -995,6 +998,11 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                           </td>
                           <td className="p-4 text-luxury-gray-300 font-mono text-[11px]">
                             {getPostCategoryName(post.categoryId)}
+                          </td>
+                          <td className="p-4">
+                            <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-mono font-bold capitalize bg-luxury-gray-950 text-gold-400 border border-gold-500/10">
+                              {post.layoutPosition || 'meio'}
+                            </span>
                           </td>
                           <td className="p-4 text-luxury-gray-300">
                             {getPostAuthorName(post.authorId)}
@@ -1121,7 +1129,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Category */}
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] text-luxury-gray-400 font-mono uppercase tracking-wider">Categoria Editorial</label>
@@ -1133,6 +1141,22 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                       {categories.map(c => (
                         <option key={c.id} value={c.id}>{c.name}</option>
                       ))}
+                    </select>
+                  </div>
+
+                  {/* Layout Position Option */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] text-luxury-gray-400 font-mono uppercase tracking-wider">Posição no Portal (Layout)</label>
+                    <select
+                      value={editingPost.layoutPosition || 'meio'}
+                      onChange={(e) => setEditingPost(prev => prev ? { ...prev, layoutPosition: e.target.value as any } : null)}
+                      className="bg-luxury-gray-950 border border-luxury-gray-850 rounded text-xs text-luxury-gray-300 px-4 py-3 outline-none focus:border-gold-500 font-sans"
+                    >
+                      <option value="maior">Maior (Destaque Principal Banner)</option>
+                      <option value="esquerda">Esquerda (Coluna Lateral Esquerda)</option>
+                      <option value="meio">Meio (Coluna Central)</option>
+                      <option value="direita">Direita (Coluna Lateral Direita)</option>
+                      <option value="menor">Menor (Artigo Compacto Secundário)</option>
                     </select>
                   </div>
 

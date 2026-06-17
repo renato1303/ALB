@@ -148,7 +148,8 @@ export function savePost(postData: Partial<Post> & { title: string; content: str
       views: 0,
       publishedAt: postData.status === 'published' ? new Date().toISOString() : '',
       createdAt: new Date().toISOString(),
-      readingTime
+      readingTime,
+      layoutPosition: postData.layoutPosition || 'meio'
     };
     posts.unshift(finalPost);
 
