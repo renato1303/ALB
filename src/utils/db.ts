@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Post, Category, Tag, User, MediaFile, Comment, DailyAnalytics } from '../types';
+import { Post, Category, Tag, User, MediaFile, Comment, DailyAnalytics, InstagramReel } from '../types';
 import {
   INITIAL_POSTS,
   INITIAL_CATEGORIES,
@@ -11,7 +11,8 @@ import {
   INITIAL_USERS,
   INITIAL_MEDIA,
   INITIAL_COMMENTS,
-  INITIAL_ANALYTICS
+  INITIAL_ANALYTICS,
+  INITIAL_INSTAGRAM_REELS
 } from '../data/initialData';
 
 // Constants for storage keys
@@ -23,17 +24,19 @@ const KEYS = {
   MEDIA: 'ab_db_media',
   COMMENTS: 'ab_db_comments',
   ANALYTICS: 'ab_db_analytics',
-  CURRENT_USER: 'ab_db_current_user'
+  CURRENT_USER: 'ab_db_current_user',
+  REELS: 'ab_db_reels'
 };
 
 // Auto initialisation of database tables
 export function initDB() {
   // One-time forced reset of posts, comments, and media to give a clean slate as requested
-  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v3')) {
-    localStorage.setItem(KEYS.POSTS, JSON.stringify([]));
+  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v5')) {
+    localStorage.setItem(KEYS.POSTS, JSON.stringify(INITIAL_POSTS));
     localStorage.setItem(KEYS.COMMENTS, JSON.stringify([]));
-    localStorage.setItem(KEYS.MEDIA, JSON.stringify([]));
-    localStorage.setItem('ab_db_force_reset_clean_slate_v3', 'true');
+    localStorage.setItem(KEYS.MEDIA, JSON.stringify(INITIAL_MEDIA));
+    localStorage.setItem(KEYS.REELS, JSON.stringify(INITIAL_INSTAGRAM_REELS));
+    localStorage.setItem('ab_db_force_reset_clean_slate_v5', 'true');
   }
 
   // Force pre-logged admin clear once to ensure guest view is active by default
@@ -62,6 +65,9 @@ export function initDB() {
   }
   if (!localStorage.getItem(KEYS.ANALYTICS)) {
     localStorage.setItem(KEYS.ANALYTICS, JSON.stringify(INITIAL_ANALYTICS));
+  }
+  if (!localStorage.getItem(KEYS.REELS)) {
+    localStorage.setItem(KEYS.REELS, JSON.stringify(INITIAL_INSTAGRAM_REELS));
   }
 }
 
@@ -459,3 +465,46 @@ export function login(email: string, passwordPlain: string): { success: boolean;
 export function logout() {
   setLoggedUser(null);
 }
+
+// === INSTAGRAM REELS ===
+export function getReels(): InstagramReel[] {
+  return getTable<InstagramReel>(KEYS.REELS).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export function saveReel(reelData: Partial<InstagramReel> & { title: string; videoUrl: string; imageUrl: string }): InstagramReel {
+  const reels = getTable<InstagramReel>(KEYS.REELS);
+  let finalReel: InstagramReel;
+
+  if (reelData.id) {
+    const index = reels.findIndex(r => r.id === reelData.id);
+    const existing = reels[index];
+    finalReel = {
+      ...existing,
+      ...reelData
+    } as InstagramReel;
+    reels[index] = finalReel;
+  } else {
+    finalReel = {
+      id: 'reel_' + Math.random().toString(36).substr(2, 9),
+      title: reelData.title,
+      videoUrl: reelData.videoUrl,
+      imageUrl: reelData.imageUrl,
+      username: reelData.username || '@alemdobilhao',
+      avatarUrl: reelData.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+      viewsCount: reelData.viewsCount || '10K',
+      likesCount: reelData.likesCount || '1.1K',
+      createdAt: new Date().toISOString()
+    };
+    reels.push(finalReel);
+  }
+
+  saveTable(KEYS.REELS, reels);
+  return finalReel;
+}
+
+export function deleteReel(id: string) {
+  const reels = getTable<InstagramReel>(KEYS.REELS);
+  const filtered = reels.filter(r => r.id !== id);
+  saveTable(KEYS.REELS, filtered);
+}
+

@@ -37,6 +37,7 @@ export interface Post {
   createdAt: string;
   readingTime: number; // calculated in minutes
   layoutPosition?: 'esquerda' | 'direita' | 'meio' | 'maior' | 'menor';
+  isExclusive?: boolean;
 }
 
 export interface Category {
@@ -90,3 +91,16 @@ export interface PostAnalytics {
   commentsCount: number;
   sharesCount: number;
 }
+
+export interface InstagramReel {
+  id: string;
+  title: string;
+  videoUrl: string; // absolute Instagram video link (reels)
+  imageUrl: string; // custom cover photo or generated placeholder
+  username: string; // e.g., "alemdobilhao"
+  avatarUrl: string; // profile picture
+  viewsCount: string; // e.g., "1.2M", "450K"
+  likesCount?: string;
+  createdAt: string;
+}
+

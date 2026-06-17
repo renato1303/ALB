@@ -8,6 +8,10 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ArticleView from './components/ArticleView';
 import AdminPanel from './components/AdminPanel';
+import { ColumnistsSection } from './components/ColumnistsSection';
+import { InstagramReelsSection } from './components/InstagramReelsSection';
+import { EditorialAttachedFeed } from './components/EditorialAttachedFeed';
+import { AfterReelsNewsList } from './components/AfterReelsNewsList';
 import { Post, Category } from './types';
 import { 
   getPosts, 
@@ -298,6 +302,14 @@ export default function App() {
               </div>
             )}
 
+            {/* NEW ATTACHED HIGH-TECH EDITORIAL STRUCTURE REPLICATING ATTACHMENT */}
+            <EditorialAttachedFeed 
+              onNavigate={handleNavigate} 
+              posts={posts} 
+              getPostCategoryName={getPostCategoryName} 
+              formatDateStr={formatDateStr} 
+            />
+
             {/* 2. THE CUSTOM THREE-COLUMN EDITORIAL PANELS (Esquerda | Meio | Direita) */}
             {(finalLeft.length > 0 || finalCenter.length > 0 || finalRight.length > 0) && (
               <div className="space-y-6">
@@ -441,6 +453,20 @@ export default function App() {
                 </div>
               </div>
             )}
+
+            {/* COLUMNISTS SLIDER SECTION (Replicating red banner in screenshot) */}
+            <ColumnistsSection />
+
+            {/* INSTAGRAM REELS SECTION (As requested by the user, mimicking YouTube Shorts attachment style) */}
+            <InstagramReelsSection />
+
+            {/* DYNAMIC ATTACHED SCREENSHOT-REPLICATING NEWS LIST */}
+            <AfterReelsNewsList 
+              posts={posts} 
+              onNavigate={handleNavigate} 
+              getPostCategoryName={getPostCategoryName} 
+              formatDateStr={formatDateStr} 
+            />
 
             {/* 3. MINOR SPECIAL FEED (Destaque Menor) */}
             {finalMinor.length > 0 && (
