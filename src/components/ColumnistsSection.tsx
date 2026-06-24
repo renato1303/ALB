@@ -15,7 +15,7 @@ const INITIAL_COLUMNISTS: Columnist[] = [
   {
     id: 'col_1',
     name: 'Flávio Ricco',
-    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&crop=face&w=200&h=200&q=80',
+    avatarUrl: '/images/avatar_flavio_ricco.jpg',
     title: 'Danilo Sacramento volta à Record e reforça elenco de "A Ira do Herdeiro"',
     content: 'O renomado ator Danilo Sacramento está de volta aos bastidores da teledramaturgia da Record. Com um papel de extrema densidade, sua entrada promete reequilibrar as forças dramáticas do núcleo principal da novela "A Ira do Herdeiro". A escalação reforça o investimento tático da emissora em produções épicas de altíssimo orçamento.',
     category: 'Mídia e TV',
@@ -24,7 +24,7 @@ const INITIAL_COLUMNISTS: Columnist[] = [
   {
     id: 'col_2',
     name: 'Carla Bittencourt',
-    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&crop=face&w=200&h=200&q=80',
+    avatarUrl: '/images/avatar_carla_bittencourt.jpg',
     title: 'Globo aposta em história sobre amizade e maternidade na próxima novela das sete',
     content: 'A Rede Globo definiu a sinopse central para a vaga da próxima novela das 19h. Apostando no carisma cotidiano, a trama será costurada pelas vivências cotidianas de três mulheres que redescobrem os limites da amizade e da maternidade em tempos de telas conectadas. A produção busca resgatar a audiência leve e descontraída com pitadas clássicas de melodrama.',
     category: 'Entretenimento',
@@ -33,7 +33,7 @@ const INITIAL_COLUMNISTS: Columnist[] = [
   {
     id: 'col_3',
     name: 'Julinho Casares',
-    avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&crop=face&w=200&h=200&q=80',
+    avatarUrl: '/images/avatar_julinho_casares.jpg',
     title: 'Ataque de pitbull a apresentador da Globo reacende debate sobre responsabilidade dos tutores',
     content: 'Mais um triste episódio envolvendo cães de grande porte reacende a urgência de regulamentações estritas sobre a guarda de raças predispostas a agressividades extremas. O debate em torno de focinheiras obrigatórias e adestramentos controlados ganha força nos legislativos municipais após o acidente com o apresentador, demandando campanhas de conscientização pública.',
     category: 'Causa Animal',
@@ -42,7 +42,7 @@ const INITIAL_COLUMNISTS: Columnist[] = [
   {
     id: 'col_4',
     name: 'Adriane Dias',
-    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&crop=face&w=200&h=200&q=80',
+    avatarUrl: '/images/avatar_adriane_dias.jpg',
     title: 'Quer engravidar? A nutrição pode ser sua grande aliada nessa fase',
     content: 'A ciência obstétrica moderna comprova anualmente que a modulação nutricional pré-concepção é um dos fatores com maior peso na taxa de sucesso da fertilização. O consumo programado de antioxidantes naturais, regulação lipídica e balanço de folatos criam a fundação ideal para um desenvolvimento embrionário sadio e seguro.',
     category: 'Saúde e Bem-estar',
@@ -51,7 +51,7 @@ const INITIAL_COLUMNISTS: Columnist[] = [
   {
     id: 'col_5',
     name: 'Daniel Castro',
-    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&crop=face&w=200&h=200&q=80',
+    avatarUrl: '/images/avatar_daniel_castro.jpg',
     title: 'As novas diretrizes de investimentos e fundações que ditam o rumo do agronegócio',
     content: 'Os principais fundos de pensão globais estão recalculando as taxas de desconto para ativos florestais e de pecuária integrada na América do Sul. A nova ordem financeira internacional exige rastreabilidade integral baseada em tecnologia de sensoriamento remoto, transformando custos de conformidade em ativos de captação premium.',
     category: 'Agrobusiness',
@@ -60,7 +60,7 @@ const INITIAL_COLUMNISTS: Columnist[] = [
   {
     id: 'col_6',
     name: 'Laura Montenegro',
-    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&crop=face&w=200&h=200&q=80',
+    avatarUrl: '/images/avatar_laura_montenegro.jpg',
     title: 'Como as pressões cambiais americanas afetam as startups brasileiras de tecnologia',
     content: 'Com as taxas de juros americanas mantendo patamares resilientes, desenvolvedores nacionais de aplicações SaaS precisam acelerar suas estratégias de exportação de serviços. Faturar em dólares com custo de engenharia em reais desponta como o principal porto seguro de liquidez corporativa para garantir rodadas Series B sem extrema diluição.',
     category: 'Finanças Digitais',

@@ -27,7 +27,8 @@ import {
   getComments, 
   saveComment, 
   getPosts, 
-  incrementPostViews 
+  incrementPostViews,
+  handleImageError
 } from '../utils/db';
 
 interface ArticleViewProps {
@@ -209,6 +210,7 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
             alt={post.title}
             className="w-full h-auto max-h-[500px] object-cover hover:scale-101 transition-transform duration-700"
             referrerPolicy="no-referrer"
+            onError={handleImageError}
           />
           <div className="absolute top-4 left-4 flex gap-1.5 bg-luxury-gray-950/80 backdrop-blur-sm px-3 py-1.5 rounded text-[10px] text-luxury-gray-400 font-mono">
             <span>© Autor Além do Bilhão</span>
@@ -392,6 +394,7 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
                       alt={p.title} 
                       className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
                       referrerPolicy="no-referrer"
+                      onError={handleImageError}
                     />
                   </div>
                   <div className="p-4 bg-luxury-gray-100">

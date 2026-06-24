@@ -124,7 +124,7 @@ export const INITIAL_POSTS: Post[] = [
 <h4>A Resiliência do Venture Capital Sênior</h4>
 <p>Diferente do frenesi puramente especulativo do início dos anos 2020, o Venture Capital foca agora em scaleups que comprovam lucro líquido sustentável e cashflow equilibrado. Startups brasileiras, mexicanas e colombianas de software como serviço (SaaS) e transações industriais integradas tornaram-se alvos preferenciais para consolidadoras globais.</p>
 <p>O resultado é um ecossistema mais racional, onde as sinergias corporativas impulsionam margens operacionais mais limpas, desenhando a arquitetura financeira da região para os próximos vinte anos.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_ma_latin_america.jpg',
     categoryId: 'cat_1', // Negócios
     authorId: 'user_1',
     tags: ['Inteligência Artificial', 'Venture Capital', 'M&A'],
@@ -146,7 +146,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>No Brasil, isso exerce pressão nos Fundos de Investimento Imobiliário (FIIs), principalmente os focados em lajes corporativas premium e galpões logísticos classe A. Para manterem-se atrativos frente ao aumento do prêmio de risco, os Fundos Imobiliários brasileiros precisam entregar yields proporcionalmente maiores, o que por consequência deprime a cotação patrimonial das cotas negociadas em bolsa.</p>
 <h4>Oportunidades em Período de Transição</h4>
 <p>Contudo, analistas apontam que a desvalorização das cotas abre janelas raras de entrada para investidores de longo prazo (value investing). Ativos de alta qualidade com contratos indexados à inflação (IPCA) e inquilinos multinacionais operando em contratos "Built to Suit" atípicos agora estão sendo negociados abaixo de seu valor real de reposição de tijolo, representando um excelente desconto patrimonial.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_fed_rates_fiis.jpg',
     categoryId: 'cat_3', // Investimentos
     authorId: 'user_2',
     tags: ['Selic', 'ESG'],
@@ -167,8 +167,8 @@ export const INITIAL_POSTS: Post[] = [
 <p>A explosão na demanda por Inteligência Artificial generativa corporativa elevou as especificações de hardware ao extremo. Chips de altíssima densidade de transistores, fabricados majoritariamente pela taiwanesa TSMC sob patentes holandesas da ASML, tornaram-se itens de segurança nacional.</p>
 <p>Estados Unidos, China e União Europeia aportaram, juntos, mais de 250 bilhões de dólares em subsídios de manufatura doméstica. O objetivo é reduzir a dependência logística extrema de Taiwan, uma das zonas de maior atrito geopolítico contemporâneo.</p>
 <h4>Sons do Amanhã: Sinais de Alerta</h4>
-<p>Para além da ficção de ficção científica, os semicondutores influenciam diretamente a inflação industrial. Componentes mais caros geram reajustes em cascata na indústria automotiva, em datacenters globais e até em equipamentos médicos complexos. Quem detiver a maior infraestrutura de processamento dominará o vetor de produtividade industrial do século.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=1200',
+<p>Para além da ficção de ficção científica, os semicondutores influenciam diretamente a inflação industrial. Componentes mais caros geram reajustes em cascata na indústria automotiva, in datacenters globais e até em equipamentos médicos complexos. Quem detiver a maior infraestrutura de processamento dominará o vetor de produtividade industrial do século.</p>`,
+    imageUrl: '/images/post_semiconductors.jpg',
     categoryId: 'cat_4', // Tecnologia
     authorId: 'user_3',
     tags: ['Inteligência Artificial', 'Fintech'],
@@ -189,7 +189,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>Para blindar seus ativos contra decisões impulsivas e instabilidades familiares, as mentes mais experientes do agronegócio, mineração e finanças estão abandonando a clássica holding patrimonial limitada. O caminho moderno envolve criar um Multi-Family Office focado em governança corporativa ativa de longo curso.</p>
 <p>Essas estruturas criam conselhos compostos majoritariamente por membros independentes e utilizam regras rígidas de distribuição de dividendos (como o alinhamento com índices de performance semestrais). Os herdeiros ganham direitos de liquidez regulamentada, e a governança tática passa a ser orquestrada por profissionais sêniores de mercado recrutados de bancos globais de investimento.</p>
 <p>Dessa forma, as famílias mantêm seu legado intocado sob custódia, diversificando os investimentos imobiliários originais em ativos líquidos internacionais, infraestrutura privada e private equity.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_family_office_succession.jpg',
     categoryId: 'cat_6', // Liderança
     authorId: 'user_1',
     tags: ['ESG', 'M&A'],
@@ -209,7 +209,7 @@ export const INITIAL_POSTS: Post[] = [
 <h4>Investimento Consciente e Rigor Contábil</h4>
 <p>Diferente da era dos custos marginais de capital próximos de zero, as rodadas milionárias lideradas por fundos institucionais exigem análises contábeis rigorosas. Startups que apresentam unidade econômica clarificada, receita recorrente anual (ARR) auditada e uma taxa de retenção de clientes acima da média de mercado estão assinando rodadas de financiamento robustas.</p>
 <p>São Paulo se consagra como o epicentro deste rali de final de ano, conectando investidores americanos com as fintechs e logtechs que se preparavam e enxugavam suas operações desde 2023.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_unicorns_sp.jpg',
     categoryId: 'cat_5', // Startups
     authorId: 'user_3',
     tags: ['Venture Capital', 'Unicórnios'],
@@ -227,7 +227,7 @@ export const INITIAL_POSTS: Post[] = [
     summary: 'A busca por isenção fiscal e rendimentos atrativos canaliza recursos para os de investimentos em saneamento básico e ferrovias.',
     content: `<p>A atratividade do crédito privado no Brasil alcançou novos patamares históricos neste semestre. Com as taxas de juros de mercado mantendo prêmios consistentes, as empresas de saneamento e infraestrutura encontraram nas debêntures de projeto incentivadas o instrumento perfeito de captação de recursos de baixo custo junto ao varejo de alta renda.</p>
 <p>As debêntures contam com isenção total de imposto de renda para pessoas físicas no Brasil, o que as torna ativos de resiliência formidável em momentos de ajuste tributário federal, oferecendo prêmios robustos acima do IPCA mais recentes.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_credit_debentures.jpg',
     categoryId: 'cat_2', // Mercado
     authorId: 'user_2',
     tags: ['Selic', 'ESG'],
@@ -246,7 +246,7 @@ export const INITIAL_POSTS: Post[] = [
     content: `<p>Em um mercado de capitais altamente competitivo, a diferença entre o sucesso e a irrelevância operacional reside puramente na precisão da execução estratégica de seus quadros humanos.</p>
 <h4>A Disciplina das Métricas Reais</h4>
 <p>A liderança sênior da Techcorp redesenhou todas as linhas de operação de desenvolvimento utilizando um framework adaptado de engenharia organizacional científica. A descentralização de decisões guiada puramente por inteligência de dados históricos garantiu o corte sistemático de custos desperdiçados e o redirecionamento de capital humano para projetos com retorno operacional comprovado de alto valor.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_techcorp_management.jpg',
     categoryId: 'cat_6', // Liderança
     authorId: 'user_2',
     tags: ['ESG'],
@@ -265,7 +265,7 @@ export const INITIAL_POSTS: Post[] = [
     content: `<p>A tecnologia generativa de IA deixou de ser curiosidade de laboratório de computação para tornar-se uma ferramenta básica de pesquisa em mesas de arbitragem de ativos regulados de alta complexidade.</p>
 <h4>Sistemas Cognitivos em Portfólios Executivos</h4>
 <p>Agentes dotados de visão de mercado avançada processam em milissegundos balanços contábeis, notas regulatórias da CVM e discursos das autoridades econômicas globais. Tais relatórios são consolidados para que gestores de patrimônios exclusivos possam calibrar posições em tempo recorde, minimizando perdas inesperadas e antecipando movimentos de bolhas.</p>`,
-    imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: '/images/post_wealth_management_ai.jpg',
     categoryId: 'cat_4', // Tecnologia
     authorId: 'user_3',
     tags: ['Inteligência Artificial', 'Fintech'],
@@ -298,9 +298,9 @@ export const INITIAL_INSTAGRAM_REELS: InstagramReel[] = [
     id: 'reel_1',
     title: 'Como faturar seu primeiro Milhão através do modelo SaaS de alta margem rápida',
     videoUrl: 'https://www.instagram.com/reels/',
-    imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=600&h=1000',
+    imageUrl: '/images/reel_saas_million.jpg',
     username: '@alemdobilhao',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: 'https://picsum.photos/id/338/150/150',
     viewsCount: '1.2M',
     likesCount: '89K',
     createdAt: new Date().toISOString()
@@ -309,9 +309,9 @@ export const INITIAL_INSTAGRAM_REELS: InstagramReel[] = [
     id: 'reel_2',
     title: '3 grandes erros que os herdeiros do Agronegócio comentem em Holding Familiar',
     videoUrl: 'https://www.instagram.com/reels/',
-    imageUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=600&h=1000',
+    imageUrl: '/images/reel_agribusiness_holding.jpg',
     username: '@alemdobilhao',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: 'https://picsum.photos/id/338/150/150',
     viewsCount: '840K',
     likesCount: '52K',
     createdAt: new Date().toISOString()
@@ -320,9 +320,9 @@ export const INITIAL_INSTAGRAM_REELS: InstagramReel[] = [
     id: 'reel_3',
     title: 'O verdadeiro segredo por trás do Valuation de novas Startups brasileiras',
     videoUrl: 'https://www.instagram.com/reels/',
-    imageUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=600&h=1000',
+    imageUrl: '/images/reel_startup_valuation.jpg',
     username: '@alemdobilhao',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: 'https://picsum.photos/id/338/150/150',
     viewsCount: '450K',
     likesCount: '27K',
     createdAt: new Date().toISOString()
@@ -331,9 +331,9 @@ export const INITIAL_INSTAGRAM_REELS: InstagramReel[] = [
     id: 'reel_4',
     title: 'O que o Federal Reserve dos EUA não te conta sobre a inflação estrutural',
     videoUrl: 'https://www.instagram.com/reels/',
-    imageUrl: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=600&h=1000',
+    imageUrl: '/images/reel_fed_inflation.jpg',
     username: '@alemdobilhao',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: 'https://picsum.photos/id/338/150/150',
     viewsCount: '2.1M',
     likesCount: '154K',
     createdAt: new Date().toISOString()
@@ -342,9 +342,9 @@ export const INITIAL_INSTAGRAM_REELS: InstagramReel[] = [
     id: 'reel_5',
     title: 'Liderança de Elite: os pilares inegociáveis de disciplina para Executivos',
     videoUrl: 'https://www.instagram.com/reels/',
-    imageUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600&h=1000',
+    imageUrl: '/images/reel_elite_leadership.jpg',
     username: '@alemdobilhao',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: 'https://picsum.photos/id/338/150/150',
     viewsCount: '1.5M',
     likesCount: '112K',
     createdAt: new Date().toISOString()

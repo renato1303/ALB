@@ -144,10 +144,16 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
     try {
       const res = await fetch('/api/supabase/status');
       if (res.ok) {
-        const data = await res.json();
-        setSupabaseStatus(data.status);
-        setSupabaseMessage(data.message || '');
-        setSupabaseTables(data.tables || {});
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          setSupabaseStatus(data.status);
+          setSupabaseMessage(data.message || '');
+          setSupabaseTables(data.tables || {});
+        } else {
+          setSupabaseStatus('unconfigured');
+          setSupabaseMessage('Ambiente de hospedagem estática (sem backend ativo). Os recursos integrados estão em modo de simulação.');
+        }
       } else {
         setSupabaseStatus('error');
         setSupabaseMessage('Erro ao obter status do Supabase.');
@@ -184,6 +190,12 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accessToken: token })
       });
+      
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        alert("Não foi possível conectar à API do Instagram. Esta funcionalidade requer o servidor backend ativo (Atualmente a hospedagem está em modo estático/Vercel sem Node.js persistente).");
+        return;
+      }
       
       const data = await res.json();
       if (res.ok && data.success) {
@@ -584,7 +596,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="flex items-center justify-center select-none h-11 mb-2">
               <img 
-                src="/images/logo%20ALB.jpg" 
+                src="/images/logo_alb.jpg" 
                 alt="Além do Bilhão" 
                 className="h-full w-auto object-contain scale-[1.1]"
                 referrerPolicy="no-referrer"

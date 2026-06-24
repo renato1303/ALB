@@ -57,9 +57,14 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
       try {
         const res = await fetch('/api/ticker');
         if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setTickerItems(data);
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              setTickerItems(data);
+            }
+          } else {
+            console.warn("API de tickers não retornou JSON. Usando valores locais/simulados.");
           }
         }
       } catch (e) {
@@ -157,16 +162,16 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
   return (
     <header id="main-header" className="w-full bg-luxury-gray-950 border-b border-luxury-gray-800 sticky top-0 z-50 transition-all">
       {/* 1. FINANCIAL STOCK TICKER (CNN Style) */}
-      <div className="w-full bg-luxury-gray-950 border-b border-luxury-gray-800 hidden sm:block font-sans select-none overflow-hidden py-2.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div className="w-full bg-luxury-gray-950 border-b border-luxury-gray-800 font-sans select-none overflow-hidden py-2 px-3 sm:py-2.5 sm:px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
           
           {/* Live Indicator Badges */}
-          <div className="flex items-center gap-2 shrink-0 border-r border-luxury-gray-850 pr-5">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 border-r border-luxury-gray-850 pr-3 sm:pr-5">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span className="text-[10px] font-black tracking-widest text-gold-400 uppercase">MERCADOS</span>
+            <span className="text-[9px] sm:text-[10px] font-black tracking-widest text-gold-400 uppercase">MERCADOS</span>
           </div>
 
           {/* Scrolling items track (Infinite Marquee) */}
@@ -200,7 +205,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
           </div>
 
           {/* Right Status */}
-          <div className="shrink-0 pl-4 border-l border-luxury-gray-850 text-[10px] text-gold-400 font-extrabold font-mono uppercase tracking-wider italic">
+          <div className="shrink-0 pl-3 sm:pl-4 border-l border-luxury-gray-850 text-[9px] sm:text-[10px] text-gold-400 font-extrabold font-mono uppercase tracking-wider italic">
             AO VIVO
           </div>
         </div>
@@ -225,7 +230,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
           className="relative flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 overflow-hidden h-10 md:h-12 lg:h-14 w-52 md:w-64 lg:w-80"
         >
           <img 
-            src="/images/logo%20ALB.jpg" 
+            src="/images/logo_alb.jpg" 
             alt="Além do Bilhão" 
             className="absolute left-0 max-w-none h-full w-auto object-contain scale-[1.8] md:scale-[1.9] lg:scale-[2.1] origin-left transition-all duration-300 hover:scale-[2.2]"
             referrerPolicy="no-referrer"

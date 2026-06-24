@@ -18,7 +18,8 @@ import {
   getCategories, 
   initDB, 
   getLoggedUser,
-  syncFromSupabase
+  syncFromSupabase,
+  handleImageError
 } from './utils/db';
 import { 
   TrendingUp, 
@@ -276,6 +277,7 @@ export default function App() {
                     alt={featuredPost.title}
                     className="w-full h-full object-cover group-hover:scale-101 transition-transform duration-700"
                     referrerPolicy="no-referrer"
+                    onError={handleImageError}
                   />
                   {/* Category tag bubble overlay */}
                   <div className="absolute top-4 left-4 bg-luxury-gray-950 font-bold font-mono tracking-[0.2em] text-[10px] text-gold-400 px-3 py-1.5 rounded uppercase shadow-lg border border-gold-550/25">
@@ -355,6 +357,7 @@ export default function App() {
                               alt="" 
                               className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
                               referrerPolicy="no-referrer"
+                              onError={handleImageError}
                             />
                             <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
                               {getPostCategoryName(post.categoryId)}
@@ -398,6 +401,7 @@ export default function App() {
                               alt="" 
                               className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
                               referrerPolicy="no-referrer"
+                              onError={handleImageError}
                             />
                             <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
                               {getPostCategoryName(post.categoryId)}
@@ -441,6 +445,7 @@ export default function App() {
                               alt="" 
                               className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
                               referrerPolicy="no-referrer"
+                              onError={handleImageError}
                             />
                             <span className="absolute bottom-2 left-2 bg-luxury-gray-950/90 backdrop-blur-sm text-gold-400 border border-white/5 font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded uppercase">
                               {getPostCategoryName(post.categoryId)}
@@ -541,7 +546,7 @@ export default function App() {
                         onClick={() => handleNavigate('article', p.slug)}
                         className="p-4.5 hover:bg-luxury-gray-150 flex gap-4 cursor-pointer transition group"
                       >
-                        <img src={p.imageUrl} className="w-16 h-12 object-cover rounded border border-luxury-gray-200 shrink-0" alt="" referrerPolicy="no-referrer" />
+                        <img src={p.imageUrl} className="w-16 h-12 object-cover rounded border border-luxury-gray-200 shrink-0" alt="" referrerPolicy="no-referrer" onError={handleImageError} />
                         <div>
                           <h4 className="font-serif font-bold text-xs md:text-sm text-white group-hover:text-gold-400 transition leading-tight line-clamp-2">{p.title}</h4>
                           <span className="text-[10px] text-luxury-gray-400 font-mono block mt-1">{formatDateStr(p.publishedAt || p.createdAt)}</span>
@@ -570,7 +575,7 @@ export default function App() {
                         onClick={() => handleNavigate('article', p.slug)}
                         className="p-4.5 hover:bg-luxury-gray-150 flex gap-4 cursor-pointer transition group"
                       >
-                        <img src={p.imageUrl} className="w-16 h-12 object-cover rounded border border-luxury-gray-200 shrink-0" alt="" referrerPolicy="no-referrer" />
+                        <img src={p.imageUrl} className="w-16 h-12 object-cover rounded border border-luxury-gray-200 shrink-0" alt="" referrerPolicy="no-referrer" onError={handleImageError} />
                         <div>
                           <h4 className="font-serif font-bold text-xs md:text-sm text-white group-hover:text-gold-400 transition leading-tight line-clamp-2">{p.title}</h4>
                           <span className="text-[10px] text-luxury-gray-400 font-mono block mt-1">{formatDateStr(p.publishedAt || p.createdAt)}</span>
@@ -630,6 +635,7 @@ export default function App() {
                         alt="" 
                         className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
                         referrerPolicy="no-referrer"
+                        onError={handleImageError}
                       />
                       <span className="absolute top-2 left-2 bg-luxury-gray-950 font-mono text-[9px] font-bold text-gold-400 px-2 py-0.5 rounded shadow border border-white/5">
                         {getPostCategoryName(post.categoryId)}

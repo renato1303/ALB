@@ -35,7 +35,7 @@ export default function Footer({ onNavigate }: FooterProps) {
         <div className="lg:col-span-5 flex flex-col gap-4">
           <div className="flex items-center select-none h-10 md:h-11">
             <img 
-              src="/images/logo%20ALB.jpg" 
+              src="/images/logo_alb.jpg" 
               alt="Além do Bilhão" 
               className="h-full w-auto object-contain scale-[1.1] origin-left"
               referrerPolicy="no-referrer"

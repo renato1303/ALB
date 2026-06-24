@@ -76,6 +76,11 @@ export async function syncFromSupabase(): Promise<{ status: string; message?: st
     const res = await fetch('/api/supabase/sync');
     if (!res.ok) throw new Error("Failed to contact sync endpoint");
     
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      return { status: 'static_mode', message: 'Hospedagem estática (sem backend ativo). Utilizando persistência em localStorage.' };
+    }
+    
     const data = await res.json();
     if (data.status === 'connected') {
       const posts = data.posts || [];
@@ -106,12 +111,12 @@ export async function syncFromSupabase(): Promise<{ status: string; message?: st
 // Auto initialisation of database tables
 export function initDB() {
   // One-time forced reset of posts, comments, and media to give a clean slate as requested
-  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v5')) {
+  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v8')) {
     localStorage.setItem(KEYS.POSTS, JSON.stringify(INITIAL_POSTS));
     localStorage.setItem(KEYS.COMMENTS, JSON.stringify([]));
     localStorage.setItem(KEYS.MEDIA, JSON.stringify(INITIAL_MEDIA));
     localStorage.setItem(KEYS.REELS, JSON.stringify(INITIAL_INSTAGRAM_REELS));
-    localStorage.setItem('ab_db_force_reset_clean_slate_v5', 'true');
+    localStorage.setItem('ab_db_force_reset_clean_slate_v8', 'true');
   }
 
   // Force pre-logged admin clear once to ensure guest view is active by default
@@ -605,5 +610,19 @@ export function saveImportedReels(reelsList: InstagramReel[]) {
 
   saveTable(KEYS.REELS, reels);
   window.dispatchEvent(new Event('supabase-sync-completed'));
+}
+
+// Global Image Error Recovery Handler (foolproof fallback)
+export function handleImageError(e: any) {
+  const target = e.currentTarget;
+  if (target.dataset.fallbackTriggered) return;
+  target.dataset.fallbackTriggered = "true";
+  
+  // Fall back to a highly reliable, high-resolution themed Picsum Photo immediately
+  const randomId = Math.floor(Math.random() * 80) + 1000;
+  target.src = `https://picsum.photos/id/${randomId}/800/500`;
+  
+  // Remove referrerpolicy attribute to bypass any restrictions
+  target.removeAttribute('referrerpolicy');
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Newspaper, Flame, Award, Clock, Sparkles, ChevronRight, Eye } from 'lucide-react';
 import { Post } from '../types';
+import { handleImageError } from '../utils/db';
 
 interface EditorialAttachedFeedProps {
   onNavigate: (view: string, param?: string) => void;
@@ -196,10 +197,11 @@ export function EditorialAttachedFeed({
               {/* Image thumbnail Column */}
               <div className="md:col-span-4 relative aspect-[4/3] rounded-lg overflow-hidden shrink-0 border border-luxury-gray-200/60">
                 <img 
-                  src={post.imageUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600&h=400'} 
+                  src={post.imageUrl || 'https://picsum.photos/id/1070/600/400'} 
                   alt={post.title} 
                   className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
                   referrerPolicy="no-referrer"
+                  onError={handleImageError}
                 />
                 
                 {/* Exclusive badge overlay on image exactly as in screenshot of Simaria return */}
@@ -272,10 +274,11 @@ export function EditorialAttachedFeed({
             >
               <div className="aspect-[16/10] w-full relative overflow-hidden">
                 <img 
-                  src={popularHighlight.imageUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600&h=400'} 
+                  src={popularHighlight.imageUrl || 'https://picsum.photos/id/1070/600/400'} 
                   alt="" 
                   className="w-full h-full object-cover group-hover:scale-101 transition duration-500"
                   referrerPolicy="no-referrer"
+                  onError={handleImageError}
                 />
                 <span className="absolute top-2.5 left-2.5 bg-gold-400 text-black font-mono text-[8px] font-black tracking-widest px-2 py-0.5 rounded uppercase">
                   Top Cobertura
@@ -334,6 +337,7 @@ export function EditorialAttachedFeed({
                       alt="" 
                       className="w-full h-full object-cover group-hover:scale-104 transition duration-500"
                       referrerPolicy="no-referrer"
+                      onError={handleImageError}
                     />
                     
                     {/* Tiny exclusive overlay tag inside thumbnails */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Newspaper, Clock, Eye, MessageSquare, Flame, Sparkles } from 'lucide-react';
 import { Post } from '../types';
+import { handleImageError } from '../utils/db';
 
 interface AfterReelsNewsListProps {
   posts: Post[];
@@ -25,7 +26,7 @@ export function AfterReelsNewsList({
       title: 'A influenciadora Tatá Barcellos acompanhou o Mundial de Clubes em Doha, no Catar, em dezembro de 2025, com despesas custeadas pela Confederação Brasileira de Futebol',
       summary: 'A influenciadora Tatá Barcellos acompanhou o Mundial de Clubes em Doha, no Catar, em dezembro de 2025, com despesas custeadas pela Confederação Brasileira de Futebol',
       publishedAt: '2026-06-17T12:00:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1060/650/450',
       categoryId: 'cat_2', // Mercado
       isExclusive: false,
       readingTime: 3,
@@ -37,7 +38,7 @@ export function AfterReelsNewsList({
       title: 'Em conversa no G7, Lula afirma que nunca se considerou um político “esquerdista”',
       summary: 'Presidente brasileiro comentou sua trajetória sindical e defendeu que a maioria dos governos no mundo ocupa posições mais moderadas no espectro político',
       publishedAt: '2026-06-17T11:45:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1070/650/450',
       categoryId: 'cat_3', // Investimentos (Finance/Politics)
       isExclusive: false,
       readingTime: 4,
@@ -49,7 +50,7 @@ export function AfterReelsNewsList({
       title: 'Real Madrid anuncia contratação de Bernardo Silva, ex-Manchester City',
       summary: 'O meio-campista português deixa a equipe inglesa após nove temporadas para ingressar na elite do futebol espanhol, com contratos comerciais multimilionários.',
       publishedAt: '2026-06-17T11:20:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1081/650/450',
       categoryId: 'cat_2', // Mercado
       isExclusive: true,
       readingTime: 3,
@@ -58,10 +59,10 @@ export function AfterReelsNewsList({
     },
     {
       id: 'src_seed_4',
-      title: 'Portugal homenageia Diogo Jota com pulseiras e cerimônia antes da estreia',
+      title: 'Portugal homenageia Diogo Jota com pulseiras e cerimônias antes da estreia',
       summary: 'Seleção portuguesa homenageou o atacante antes do duelo com a RD Congo; familiares dos irmãos Diogo Jota e André Silva acompanharam a partida nos Estados Unidos',
       publishedAt: '2026-06-17T10:40:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1518063319789-7217e6706b04?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1041/650/450',
       categoryId: 'cat_2', // Mercado
       isExclusive: false,
       readingTime: 4,
@@ -73,7 +74,7 @@ export function AfterReelsNewsList({
       title: 'Tainá Militão repudia ataques na web e promete acionar a Justiça: “Não vou mais tolerar”',
       summary: 'A influenciadora está grávida de seis meses do primeiro filho com Éder Militão e prometeu acionar os mecanismos legais e judiciais contra difamações online.',
       publishedAt: '2026-06-17T10:15:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1069/650/450',
       categoryId: 'cat_1', // Negócios
       isExclusive: true,
       readingTime: 3,
@@ -85,7 +86,7 @@ export function AfterReelsNewsList({
       title: 'Após drama com visto, mãe do goleiro Vozinha pode realizar sonho de acompanhar filho na Copa',
       summary: 'Destaque de Cabo Verde, arqueiro pode ter a presença da mãe nas arquibancadas após mobilização integrada para viabilizar viagem aos Estados Unidos',
       publishedAt: '2026-06-17T09:50:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1038/650/450',
       categoryId: 'cat_2', // Mercado (Sports core)
       isExclusive: false,
       readingTime: 4,
@@ -97,7 +98,7 @@ export function AfterReelsNewsList({
       title: 'Influenciador envolvido em investigação, Buzeira continua preso após decisão do STJ',
       summary: 'Rapaz é alvo da Operação Narco Bet, que apura suposto esquema envolvendo apostas on-line, rifas e recursos ligados ao tráfico internacional de drogas',
       publishedAt: '2026-06-17T09:10:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1053/650/450',
       categoryId: 'cat_3', // Investimentos
       isExclusive: true,
       readingTime: 5,
@@ -109,7 +110,7 @@ export function AfterReelsNewsList({
       title: 'Titular da Costa do Marfim foi preso às vésperas da Copa por suspeita de manipulação',
       summary: 'Elye Wahi, atacante da Costa do Marfim, teria forçado um cartão amarelo em uma partida da Ligue 1 para faturamento de intermediários em apostas.',
       publishedAt: '2026-06-17T08:40:00Z',
-      imageUrl: 'https://images.unsplash.com/photo-1431324155629-1a6edd175157?auto=format&fit=crop&q=80&w=650&h=450',
+      imageUrl: 'https://picsum.photos/id/1050/650/450',
       categoryId: 'cat_3', // Investimentos (Law/Bet)
       isExclusive: false,
       readingTime: 4,
@@ -200,10 +201,11 @@ export function AfterReelsNewsList({
                   {/* Left Column: Rectangular Image wrapper exactly as in mockup */}
                   <div className="md:col-span-4 relative aspect-[6/4] rounded-lg overflow-hidden bg-luxury-gray-950 border border-luxury-gray-900 shrink-0 select-none">
                     <img 
-                      src={post.imageUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600&h=400'} 
+                      src={post.imageUrl || 'https://picsum.photos/id/1070/600/400'} 
                       alt="" 
                       className="w-full h-full object-cover transition duration-500 group-hover:scale-101 filter brightness-[0.85] group-hover:brightness-[1]"
                       referrerPolicy="no-referrer"
+                      onError={handleImageError}
                     />
                     
                     {/* Tiny visual indicators */}
