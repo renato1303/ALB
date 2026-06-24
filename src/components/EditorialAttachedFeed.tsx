@@ -224,11 +224,11 @@ export function EditorialAttachedFeed({
                     {post.publishedAt ? formatDateStr(post.publishedAt) : 'Recente'}
                   </span>
                   
-                  <h3 className="font-serif font-black text-sm md:text-base text-white group-hover:text-gold-400 leading-snug transition duration-300">
+                  <h3 className="font-serif font-black text-base md:text-lg text-white group-hover:text-gold-400 leading-snug transition duration-300">
                     {post.title}
                   </h3>
                   
-                  <p className="text-[11px] md:text-xs text-luxury-gray-300 font-sans leading-relaxed line-clamp-3">
+                  <p className="text-[13px] md:text-sm text-luxury-gray-300 font-sans leading-relaxed line-clamp-3">
                     {post.summary}
                   </p>
                 </div>
@@ -298,7 +298,7 @@ export function EditorialAttachedFeed({
                   <span className="text-[8px] font-mono font-bold tracking-wider text-luxury-gray-500 uppercase">
                     {getPostCategoryName(popularHighlight.categoryId) || 'GERAL'}
                   </span>
-                  <p className="font-sans font-bold text-xs text-white group-hover:text-gold-400 leading-snug transition duration-300 line-clamp-3">
+                  <p className="font-sans font-bold text-sm md:text-base text-white group-hover:text-gold-400 leading-snug transition duration-300 line-clamp-3">
                     {popularHighlight.title}
                   </p>
                 </div>
@@ -321,7 +321,7 @@ export function EditorialAttachedFeed({
 
                 {/* Title */}
                 <div className="flex-1 space-y-1">
-                  <h4 className="font-sans font-bold text-[11px] md:text-xs text-white group-hover:text-gold-300 leading-snug transition line-clamp-3">
+                  <h4 className="font-sans font-bold text-xs md:text-sm text-white group-hover:text-gold-300 leading-snug transition line-clamp-3">
                     {item.title}
                   </h4>
                   <span className="text-[8px] font-mono text-luxury-gray-400 block font-semibold">

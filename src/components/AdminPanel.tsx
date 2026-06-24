@@ -37,7 +37,8 @@ import {
   Video,
   Instagram,
   ExternalLink,
-  X
+  X,
+  User as UserIcon
 } from 'lucide-react';
 
 // Recharts imports for the premium analytics view
@@ -780,11 +781,17 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             title="Alterar minha foto de perfil"
           >
             <div className="relative shrink-0">
-              <img
-                src={currentUser.avatarUrl}
-                alt={currentUser.name}
-                className="w-10 h-10 rounded-full border border-gold-400 group-hover:border-gold-500 object-cover transition"
-              />
+              {currentUser.avatarUrl ? (
+                <img
+                  src={currentUser.avatarUrl}
+                  alt={currentUser.name}
+                  className="w-10 h-10 rounded-full border border-gold-400 group-hover:border-gold-500 object-cover transition"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full border border-gold-400 group-hover:border-gold-500 bg-luxury-gray-850 flex items-center justify-center transition shrink-0">
+                  <UserIcon className="w-5 h-5 text-gold-400" />
+                </div>
+              )}
               <div className="absolute -bottom-1 -right-1 bg-gold-400 text-luxury-gray-950 rounded-full p-0.5 border border-luxury-gray-950 shadow-md group-hover:bg-gold-500 transition">
                 <Plus size={8} className="stroke-[3px]" />
               </div>
@@ -2208,7 +2215,13 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                         {users.map(u => (
                           <tr key={u.id} className="hover:bg-luxury-gray-850/40 transition">
                             <td className="p-4 flex items-center gap-2.5">
-                              <img src={u.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover border border-gold-400 shrink-0" />
+                              {u.avatarUrl ? (
+                                <img src={u.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover border border-gold-400 shrink-0" />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full border border-gold-400 bg-luxury-gray-850 flex items-center justify-center shrink-0">
+                                  <UserIcon className="w-4 h-4 text-gold-400" />
+                                </div>
+                              )}
                               <div>
                                 <h4 className="font-bold text-white leading-none">{u.name}</h4>
                                 <span className="text-[10px] text-luxury-gray-400 block mt-1">{u.email}</span>
@@ -2532,11 +2545,17 @@ create table if not exists reels (
               <div className="flex flex-col items-center justify-center py-4 bg-luxury-gray-950/40 rounded-xl border border-luxury-gray-850">
                 <span className="text-[9px] font-mono font-bold text-luxury-gray-500 uppercase tracking-widest mb-3">Prévia do Avatar</span>
                 <div className="relative">
-                  <img 
-                    src={tempProfileUrl || currentUser.avatarUrl} 
-                    alt="Preview" 
-                    className="w-20 h-20 rounded-full border-2 border-gold-400 object-cover shadow-lg"
-                  />
+                  {(tempProfileUrl || currentUser.avatarUrl) ? (
+                    <img 
+                      src={tempProfileUrl || currentUser.avatarUrl} 
+                      alt="Preview" 
+                      className="w-20 h-20 rounded-full border-2 border-gold-400 object-cover shadow-lg"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full border-2 border-gold-400 bg-luxury-gray-850 flex items-center justify-center shadow-lg shrink-0">
+                      <UserIcon className="w-8 h-8 text-gold-400" />
+                    </div>
+                  )}
                 </div>
                 <h4 className="text-xs font-bold text-white mt-2.5 leading-none">{currentUser.name}</h4>
                 <span className="text-[10px] text-gold-400 font-mono mt-1.5">{currentUser.role}</span>

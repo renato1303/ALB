@@ -33,11 +33,11 @@ export default function Footer({ onNavigate }: FooterProps) {
       {/* 1. NEWSLETTER BRIEF AND LOGO HERO SECTION */}
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 border-b border-luxury-gray-900">
         <div className="lg:col-span-5 flex flex-col gap-4">
-          <div className="flex items-center select-none h-10 md:h-11">
+          <div className="flex items-center select-none h-20 md:h-24">
             <img 
               src="/images/logo_alb.jpg" 
               alt="Além do Bilhão" 
-              className="h-full w-auto object-contain scale-[1.1] origin-left"
+              className="h-full w-auto object-contain scale-[1.2] origin-left"
               referrerPolicy="no-referrer"
             />
           </div>
@@ -98,7 +98,7 @@ export default function Footer({ onNavigate }: FooterProps) {
       </div>
 
       {/* 2. SITEMAP/ROBOTS DIRECT LINKS */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-xs border-b border-luxury-gray-900">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-[13px] md:text-sm border-b border-luxury-gray-900">
         
         {/* Col 1: Editorial */}
         <div className="flex flex-col gap-3">

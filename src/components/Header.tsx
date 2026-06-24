@@ -212,7 +212,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
       </div>
 
       {/* 2. MAIN BRAND HEADER */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-1.5 lg:py-2 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-1 lg:py-1.5 flex items-center justify-between">
         
         {/* Toggle Mobile Menu Button */}
         <button
@@ -227,7 +227,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
         {/* LOGO: ALÉM DO BILHÃO (Image replacing text with seamless design) */}
         <div 
           onClick={() => { onNavigate('home'); onSearch(''); }}
-          className="flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 h-12 md:h-[56px] lg:h-[68px]"
+          className="flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 h-16 md:h-24 lg:h-28"
         >
           <img 
             src="/images/logo_alb.jpg" 
@@ -264,11 +264,17 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
           {/* Admin Redirect Login Action */}
           {currentUser ? (
             <div className="flex items-center gap-3 bg-luxury-gray-900/60 border border-luxury-gray-800 rounded-full py-1.5 pl-2.5 pr-4 transition hover:border-gold-500/50">
-              <img
-                src={currentUser.avatarUrl}
-                alt={currentUser.name}
-                className="w-7 h-7 rounded-full border border-gold-500 object-cover"
-              />
+              {currentUser.avatarUrl ? (
+                <img
+                  src={currentUser.avatarUrl}
+                  alt={currentUser.name}
+                  className="w-7 h-7 rounded-full border border-gold-500 object-cover"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full border border-gold-500 bg-luxury-gray-850 flex items-center justify-center shrink-0">
+                  <UserIcon className="w-4 h-4 text-gold-400" />
+                </div>
+              )}
               <div className="flex flex-col">
                 <span className="text-[11px] text-luxury-gray-200 font-medium leading-none">{currentUser.name}</span>
                 <span className="text-[9px] text-gold-400 font-mono leading-none mt-1">{currentUser.role}</span>
@@ -385,11 +391,17 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
             {currentUser ? (
               <div className="flex flex-col gap-3 bg-luxury-gray-900/80 p-4 rounded-lg border border-luxury-gray-850">
                 <div className="flex items-center gap-3">
-                  <img
-                    src={currentUser.avatarUrl}
-                    alt={currentUser.name}
-                    className="w-9 h-9 rounded-full border border-gold-500 object-cover"
-                  />
+                  {currentUser.avatarUrl ? (
+                    <img
+                      src={currentUser.avatarUrl}
+                      alt={currentUser.name}
+                      className="w-9 h-9 rounded-full border border-gold-500 object-cover"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full border border-gold-500 bg-luxury-gray-850 flex items-center justify-center shrink-0">
+                      <UserIcon className="w-5 h-5 text-gold-400" />
+                    </div>
+                  )}
                   <div>
                     <h4 className="text-sm font-semibold">{currentUser.name}</h4>
                     <span className="text-[10px] text-gold-400 font-mono tracking-wider">{currentUser.role}</span>

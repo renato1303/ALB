@@ -12,7 +12,7 @@ export const INITIAL_USERS: User[] = [
     email: 'contatolinkagencia@gmail.com', // Pre-configured Super Admin based on viewer metadata
     passwordHash: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password '123456' mockup
     role: 'Super Admin',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: '',
     bio: 'Fundador e Diretor de Redação do Além do Bilhão. Investidor de risco e entusiasta de inovação no mercado latino-americano.',
     active: true,
     createdAt: '2026-01-01T08:00:00Z'

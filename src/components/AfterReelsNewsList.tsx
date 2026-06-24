@@ -233,12 +233,12 @@ export function AfterReelsNewsList({
                       </div>
 
                       {/* Headline - Bold, modern, high impact, styled like image */}
-                      <h4 className="font-serif font-black text-sm md:text-base text-white group-hover:text-gold-400 leading-snug tracking-normal transition duration-300 line-clamp-3">
+                      <h4 className="font-serif font-black text-base md:text-lg text-white group-hover:text-gold-400 leading-snug tracking-normal transition duration-300 line-clamp-3">
                         {post.title}
                       </h4>
 
                       {/* Excerpt Summary */}
-                      <p className="text-[11px] md:text-xs text-luxury-gray-300 font-sans leading-relaxed line-clamp-2 md:line-clamp-3">
+                      <p className="text-[13px] md:text-sm text-luxury-gray-300 font-sans leading-relaxed line-clamp-2 md:line-clamp-3">
                         {post.summary}
                       </p>
                     </div>

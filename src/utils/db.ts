@@ -149,6 +149,34 @@ export function initDB() {
   if (!localStorage.getItem(KEYS.REELS)) {
     localStorage.setItem(KEYS.REELS, JSON.stringify(INITIAL_INSTAGRAM_REELS));
   }
+
+  // Clear superadmin avatar if it contains the pre-configured Unsplash images to allow user selection
+  const storedUsersRaw = localStorage.getItem(KEYS.USERS);
+  if (storedUsersRaw) {
+    try {
+      const storedUsers: User[] = JSON.parse(storedUsersRaw);
+      const brunoIndex = storedUsers.findIndex(u => u.id === 'user_1');
+      if (brunoIndex !== -1 && (
+        storedUsers[brunoIndex].avatarUrl.includes('1534528741775-53994a69daeb') || 
+        storedUsers[brunoIndex].avatarUrl.includes('1472099645785-5658abf4ff4e')
+      )) {
+        storedUsers[brunoIndex].avatarUrl = '';
+        localStorage.setItem(KEYS.USERS, JSON.stringify(storedUsers));
+        
+        // Also update the active session user if they are logged in as Bruno
+        const storedCurrentUserRaw = localStorage.getItem(KEYS.CURRENT_USER);
+        if (storedCurrentUserRaw) {
+          const currentUser: User = JSON.parse(storedCurrentUserRaw);
+          if (currentUser.id === 'user_1') {
+            currentUser.avatarUrl = '';
+            localStorage.setItem(KEYS.CURRENT_USER, JSON.stringify(currentUser));
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 
 // Low-level helper functions

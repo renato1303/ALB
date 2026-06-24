@@ -162,11 +162,17 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
             
             <div className="flex items-center gap-3">
               {author && (
-                <img
-                  src={author.avatarUrl}
-                  alt={author.name}
-                  className="w-11 h-11 rounded-full border border-gold-400/80 object-cover shrink-0"
-                />
+                author.avatarUrl ? (
+                  <img
+                    src={author.avatarUrl}
+                    alt={author.name}
+                    className="w-11 h-11 rounded-full border border-gold-400/80 object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-11 h-11 rounded-full border border-gold-400/80 bg-luxury-gray-100 flex items-center justify-center shrink-0">
+                    <UserIcon className="w-5 h-5 text-gold-400" />
+                  </div>
+                )
               )}
               <div>
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider">{author?.name || 'Redação'}</h3>
@@ -320,11 +326,17 @@ export default function ArticleView({ post, onNavigate }: ArticleViewProps) {
             {/* AUTHOR BIO EXPANSION BAR */}
             {author && (
               <div className="bg-luxury-gray-100/40 rounded-xl border border-luxury-gray-200 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mt-12">
-                <img
-                  src={author.avatarUrl}
-                  alt={author.name}
-                  className="w-16 h-16 rounded-full border border-gold-400 object-cover shadow"
-                />
+                {author.avatarUrl ? (
+                  <img
+                    src={author.avatarUrl}
+                    alt={author.name}
+                    className="w-16 h-16 rounded-full border border-gold-400 object-cover shadow"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full border border-gold-400 bg-luxury-gray-100 flex items-center justify-center shadow shrink-0">
+                    <UserIcon className="w-7 h-7 text-gold-400" />
+                  </div>
+                )}
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center justify-center md:justify-start gap-1.5">
                     <h4 className="font-serif font-black text-white text-base">{author.name}</h4>

@@ -32,8 +32,8 @@ function mapPostToDb(p: any) {
     content: p.content || "",
     image_url: p.imageUrl || "",
     video_url: p.videoUrl || "",
-    category_id: p.categoryId,
-    author_id: p.authorId,
+    category_id: p.categoryId || null,
+    author_id: p.authorId || null,
     tags: p.tags || [],
     status: p.status || "draft",
     views: p.views || 0,
@@ -222,6 +222,31 @@ async function startServer() {
     try {
       const post = req.body;
       const mapped = mapPostToDb(post);
+
+      // Auto-upsert category if it is referenced but might be missing from the DB to prevent foreign key errors
+      if (mapped.category_id) {
+        const catId = mapped.category_id;
+        const defaultCats: Record<string, { name: string, slug: string, description: string }> = {
+          'cat_1': { name: 'Negócios', slug: 'negocios', description: 'Estratégias corporativas, fusões e aquisições, governança e histórias de sucesso empresarial.' },
+          'cat_2': { name: 'Mercado', slug: 'mercado', description: 'Cobertura em tempo real de bolsas globais, commodities, inflação e políticas macroeconômicas.' },
+          'cat_3': { name: 'Investimentos', slug: 'investimentos', description: 'Análises de ativos, fundos imobiliários, renda variável, renda fixa e alocações patrimoniais.' },
+          'cat_4': { name: 'Tecnologia', slug: 'tecnologia', description: 'O impacto de inteligência artificial, semicondutores, cibersegurança e infraestruturas digitais.' },
+          'cat_5': { name: 'Startups', slug: 'startups', description: 'Venture Capital, rodadas de investimento (Série A/B/C) e novos modelos disruptivos de negócios.' },
+          'cat_6': { name: 'Liderança', slug: 'lideranca', description: 'Conselhos de administração, coaching executivo, metodologias de gestão e perfis de grandes CEOs.' }
+        };
+
+        const { data: catExists } = await supabase.from('categories').select('id').eq('id', catId).maybeSingle();
+        if (!catExists) {
+          const info = defaultCats[catId] || { name: 'Geral', slug: 'geral', description: 'Categoria geral' };
+          await supabase.from('categories').upsert({
+            id: catId,
+            name: info.name,
+            slug: info.slug,
+            description: info.description
+          });
+        }
+      }
+
       const { error } = await supabase.from('posts').upsert(mapped);
       if (error) throw error;
       res.json({ success: true, post: mapPostFromDb(mapped) });

@@ -364,10 +364,10 @@ export default function App() {
                             </span>
                           </div>
                           <div className="space-y-2">
-                            <h5 className="font-serif font-bold text-sm text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
+                            <h5 className="font-serif font-bold text-sm md:text-base text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
                               {post.title}
                             </h5>
-                            <p className="text-[11px] text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
+                            <p className="text-xs md:text-sm text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
                               {post.summary}
                             </p>
                           </div>
@@ -408,10 +408,10 @@ export default function App() {
                             </span>
                           </div>
                           <div className="space-y-2">
-                            <h5 className="font-serif font-bold text-sm text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
+                            <h5 className="font-serif font-bold text-sm md:text-base text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
                               {post.title}
                             </h5>
-                            <p className="text-[11px] text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
+                            <p className="text-xs md:text-sm text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
                               {post.summary}
                             </p>
                           </div>
@@ -452,10 +452,10 @@ export default function App() {
                             </span>
                           </div>
                           <div className="space-y-2">
-                            <h5 className="font-serif font-bold text-sm text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
+                            <h5 className="font-serif font-bold text-sm md:text-base text-white group-hover:text-gold-400 transition leading-snug line-clamp-2">
                               {post.title}
                             </h5>
-                            <p className="text-[11px] text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
+                            <p className="text-xs md:text-sm text-luxury-gray-300 leading-normal line-clamp-2 font-sans">
                               {post.summary}
                             </p>
                           </div>
