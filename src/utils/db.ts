@@ -591,3 +591,19 @@ export function deleteReel(id: string) {
   syncReelDeleteToSupabase(id);
 }
 
+export function saveImportedReels(reelsList: InstagramReel[]) {
+  const reels = getTable<InstagramReel>(KEYS.REELS);
+  
+  reelsList.forEach(imported => {
+    const existingIndex = reels.findIndex(r => r.id === imported.id);
+    if (existingIndex !== -1) {
+      reels[existingIndex] = { ...reels[existingIndex], ...imported };
+    } else {
+      reels.unshift(imported);
+    }
+  });
+
+  saveTable(KEYS.REELS, reels);
+  window.dispatchEvent(new Event('supabase-sync-completed'));
+}
+

@@ -303,6 +303,79 @@ async function startServer() {
     }
   });
 
+  // Import Reels directly from Instagram Graph API using an Access Token
+  app.post("/api/instagram/import", async (req, res) => {
+    const { accessToken } = req.body;
+    if (!accessToken) {
+      return res.status(400).json({ error: "Access token do Instagram é obrigatório." });
+    }
+
+    try {
+      console.log("Fetching media from Instagram Graph API...");
+      const instaRes = await fetch(
+        `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,username,timestamp&access_token=${accessToken}`
+      );
+
+      if (!instaRes.ok) {
+        const errorText = await instaRes.text();
+        console.error("Instagram API returned an error:", errorText);
+        throw new Error(`Erro na API do Instagram: ${errorText || instaRes.statusText}`);
+      }
+
+      const responseData = await instaRes.json() as any;
+      const mediaList = responseData?.data || [];
+      
+      if (mediaList.length === 0) {
+        return res.json({ success: true, message: "Nenhuma publicação encontrada nesta conta do Instagram.", reels: [] });
+      }
+
+      // Convert and map fetched media to our InstagramReel structure
+      const importedReels = mediaList
+        .filter((item: any) => item.media_type === "VIDEO" || item.media_type === "IMAGE" || item.media_type === "CAROUSEL_ALBUM")
+        .slice(0, 15) // limit to top 15 reels
+        .map((item: any, index: number) => {
+          // Generate simulated stats to match high-quality visuals
+          const viewsNum = Math.floor(Math.random() * 40) + 5; // 5k to 45k
+          const likesNum = Math.floor(viewsNum * 0.12) + 1; // 12% like ratio
+          
+          return {
+            id: item.id,
+            title: item.caption || "Insights exclusivos Além do Bilhão",
+            videoUrl: item.permalink || "https://www.instagram.com/reels/",
+            imageUrl: item.thumbnail_url || item.media_url || "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=600&h=1000",
+            username: item.username ? `@${item.username}` : "@alemdobilhao",
+            avatarUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=300&h=300", // Technology/Aesthetic abstract profile image
+            viewsCount: `${viewsNum}K`,
+            likesCount: `${likesNum}K`,
+            createdAt: item.timestamp || new Date().toISOString()
+          };
+        });
+
+      // If Supabase is active, push these imported reels straight into Supabase database as well!
+      if (supabase && importedReels.length > 0) {
+        console.log("Upserting imported reels to Supabase cloud...");
+        for (const reel of importedReels) {
+          try {
+            const mapped = mapReelToDb(reel);
+            const { error } = await supabase.from('reels').upsert(mapped);
+            if (error) console.error("Error pushing reel to Supabase:", error.message);
+          } catch (err) {
+            console.error("Failed to upsert reel during import sync:", err);
+          }
+        }
+      }
+
+      return res.json({
+        success: true,
+        message: `Sincronizado com sucesso! ${importedReels.length} publicações importadas do Instagram.`,
+        reels: importedReels
+      });
+    } catch (error: any) {
+      console.error("Instagram import failed:", error);
+      return res.status(500).json({ error: error.message });
+    }
+  });
+
   // HG Fallbacks to match the user's attachment exactly if API is closed/fails
 
   const fallbacks: Record<string, { price: number, prevClose: number }> = {

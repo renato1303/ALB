@@ -79,7 +79,8 @@ import {
   getReels,
   saveReel,
   deleteReel,
-  syncFromSupabase
+  syncFromSupabase,
+  saveImportedReels
 } from '../utils/db';
 
 interface AdminPanelProps {
@@ -164,6 +165,44 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
     checkSupabaseStatus();
     loadDatabases();
     alert(result.status === 'connected' ? 'Sincronização com o Supabase concluída!' : 'Aviso: ' + result.message);
+  };
+
+  // Instagram connection states
+  const [isImportingInsta, setIsImportingInsta] = useState(false);
+  const [instaToken, setInstaToken] = useState(localStorage.getItem('instagram_access_token') || '');
+
+  const handleImportInstagram = async (token: string) => {
+    if (!token || token.trim().length < 10) {
+      alert("Por favor, insira um token de acesso do Instagram válido.");
+      return;
+    }
+    
+    setIsImportingInsta(true);
+    try {
+      const res = await fetch('/api/instagram/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken: token })
+      });
+      
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (data.reels && data.reels.length > 0) {
+          saveImportedReels(data.reels);
+          loadDatabases();
+          alert(data.message || "Sincronização com o Instagram concluída com sucesso!");
+        } else {
+          alert(data.message || "Sincronização concluída, mas nenhuma publicação correspondente foi importada.");
+        }
+      } else {
+        alert("Falha ao importar mídias do Instagram: " + (data.error || "Erro desconhecido."));
+      }
+    } catch (error: any) {
+      console.error("Instagram sync failed:", error);
+      alert("Erro de rede ao conectar com o Instagram: " + error.message);
+    } finally {
+      setIsImportingInsta(false);
+    }
   };
 
   // Pull context indicators
@@ -1758,46 +1797,89 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
             </div>
 
             {/* INTEGRATION SETTINGS */}
-            <div className="bg-luxury-gray-900 p-5 rounded-xl border border-luxury-gray-850 space-y-4">
+            <div className="bg-luxury-gray-900 p-6 rounded-xl border border-luxury-gray-850 space-y-6">
               <div className="flex items-center gap-2">
                 <Instagram className="text-gold-400 animate-pulse" size={18} />
-                <h3 className="font-sans font-bold text-sm text-white uppercase">Sincronização Direta de API</h3>
+                <h3 className="font-sans font-bold text-sm text-white uppercase tracking-wider">Sincronização Direta do Instagram</h3>
               </div>
-              <p className="text-xs text-luxury-gray-400 leading-relaxed max-w-3xl">
-                Deseja sincronizar as postagens de forma 100% automatizada? Insira abaixo seu <strong>Token de Acesso do Instagram Basic Display</strong> ou <strong>Facebook Graph API</strong>. Quando ativo, o portal tentará consultar e listar automaticamente seus últimos broadcasts em primeiro plano, ignorando os placeholders locais.
+              <p className="text-xs text-luxury-gray-400 leading-relaxed max-w-4xl">
+                Deseja que os Reels apareçam de forma 100% automática e atualizada? Com o Além do Bilhão, você pode integrar diretamente a <strong>API de Exibição Básica do Instagram (Basic Display API)</strong>. Basta gerar o seu <strong>Token de Acesso de Usuário</strong> e salvá-lo abaixo.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1 flex flex-col gap-1.5">
-                  <span className="text-[10px] text-luxury-gray-500 font-mono uppercase">User Access Token (Instagram)</span>
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+                <div className="md:col-span-8 flex flex-col gap-1.5">
+                  <label className="text-[10px] text-luxury-gray-400 font-mono uppercase font-black tracking-wider">User Access Token (Instagram Graph API)</label>
                   <input 
                     type="password"
-                    placeholder="IGQVJxxxxxxxxxx..."
-                    value={localStorage.getItem('instagram_access_token') || ''}
+                    placeholder="IGQVJxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..."
+                    value={instaToken}
                     onChange={(e) => {
-                      localStorage.setItem('instagram_access_token', e.target.value);
+                      const val = e.target.value;
+                      setInstaToken(val);
+                      localStorage.setItem('instagram_access_token', val);
                     }}
-                    className="bg-luxury-gray-950 border border-luxury-gray-850 rounded text-xs text-white px-4 py-3 outline-none focus:border-pink-500"
+                    className="bg-luxury-gray-950 border border-luxury-gray-850 rounded text-xs text-white px-4 py-3 outline-none focus:border-pink-500 w-full font-mono"
                   />
                 </div>
-                <div className="flex items-end pt-3 sm:pt-0">
+                <div className="md:col-span-4 flex gap-2">
+                  <button 
+                    onClick={() => handleImportInstagram(instaToken)}
+                    disabled={isImportingInsta}
+                    className="flex-1 px-5 py-3 bg-gradient-to-r from-yellow-500 via-pink-600 to-purple-600 hover:brightness-110 text-white text-xs font-sans font-black uppercase tracking-wider rounded transition disabled:opacity-50 cursor-pointer"
+                  >
+                    {isImportingInsta ? "Importando..." : "Importar Reels"}
+                  </button>
                   <button 
                     onClick={() => {
-                      const tok = localStorage.getItem('instagram_access_token');
-                      if (tok && tok.trim().length > 10) {
-                        alert('Integração de Sincronização Automática Ativa! A API foi configurada. Como esta é uma simulação segura em tempo real, recomendamos complementar o catálogo editando os registros abaixo caso deseje forçar portabilidades específicas.');
-                      } else {
-                        alert('Por favor, digite um token válido para testes de conexões de Webhooks.');
+                      if (confirm("Deseja remover o token de acesso do Instagram?")) {
+                        setInstaToken('');
+                        localStorage.removeItem('instagram_access_token');
+                        alert("Token removido.");
                       }
                     }}
-                    className="px-6 py-3 bg-luxury-gray-800 hover:bg-luxury-gray-850 text-gold-400 text-xs font-mono font-bold uppercase border border-luxury-gray-850 rounded transition"
+                    className="px-3 py-3 bg-luxury-gray-950 hover:bg-luxury-gray-850 border border-luxury-gray-800 text-rose-450 text-xs rounded transition"
+                    title="Remover Token"
                   >
-                    Ativar Webhook
+                    Remover
                   </button>
                 </div>
               </div>
-              <div className="text-[10px] text-luxury-gray-500 flex items-center gap-1">
-                <span>• Status da Conexão:</span>
-                <span className="text-emerald-400 font-semibold uppercase">Habilitado com sucesso (Fallback Curado Ativo)</span>
+
+              {/* INSTAGRAM HELP GUIDE ACCORDION */}
+              <div className="bg-luxury-gray-950/60 border border-luxury-gray-850 p-4.5 rounded-lg space-y-3">
+                <h4 className="text-xs font-black text-white uppercase tracking-wider text-gold-450">Como obter o Token de Acesso do Instagram?</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[11px] text-luxury-gray-300 leading-relaxed">
+                  <div className="space-y-1 bg-luxury-gray-900/40 p-3 rounded border border-luxury-gray-850">
+                    <span className="text-gold-500 font-mono font-bold block text-xs">1. Facebook Developers</span>
+                    <p className="text-luxury-gray-400">
+                      Acesse o portal <a href="https://developers.facebook.com" target="_blank" rel="noreferrer" className="text-gold-400 underline hover:text-white">Facebook Developers</a>, registre uma conta de desenvolvedor e crie um novo aplicativo do tipo <strong>"Consumidor"</strong>.
+                    </p>
+                  </div>
+                  <div className="space-y-1 bg-luxury-gray-900/40 p-3 rounded border border-luxury-gray-850">
+                    <span className="text-gold-500 font-mono font-bold block text-xs">2. Adicionar Exibição Básica</span>
+                    <p className="text-luxury-gray-400">
+                      Vá em "Adicionar Produto" e escolha <strong>"Exibição básica do Instagram"</strong> (Instagram Basic Display). Siga as etapas de registro de domínio rápido.
+                    </p>
+                  </div>
+                  <div className="space-y-1 bg-luxury-gray-900/40 p-3 rounded border border-luxury-gray-850">
+                    <span className="text-gold-500 font-mono font-bold block text-xs">3. Gerar Token de Teste</span>
+                    <p className="text-luxury-gray-400">
+                      Adicione seu usuário do Instagram na seção "User Token Generator", aceite o convite na sua conta do Instagram e clique em <strong>"Generate Token"</strong> para obter seu código de acesso.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-[10px] text-luxury-gray-500 flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <span>• Status da Integração:</span>
+                  {instaToken ? (
+                    <span className="text-emerald-400 font-semibold uppercase">Token configurado • Pronto para Importação</span>
+                  ) : (
+                    <span className="text-amber-400 font-semibold uppercase">Aguardando inserção de Token</span>
+                  )}
+                </div>
+                <span>*O sistema utilizará fallback seguro de mídias curadas caso nenhum token seja configurado.</span>
               </div>
             </div>
 
