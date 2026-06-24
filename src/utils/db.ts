@@ -16,7 +16,7 @@ import {
 } from '../data/initialData';
 
 // Constants for storage keys
-const KEYS = {
+export const KEYS = {
   POSTS: 'ab_db_posts',
   CATEGORIES: 'ab_db_categories',
   TAGS: 'ab_db_tags',
@@ -27,6 +27,81 @@ const KEYS = {
   CURRENT_USER: 'ab_db_current_user',
   REELS: 'ab_db_reels'
 };
+
+// --- SUPABASE BACKGROUND SYNC HELPERS ---
+function syncPostToSupabase(post: Post) {
+  fetch('/api/supabase/posts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(post)
+  }).catch(err => console.warn("Supabase background sync failed for post:", err));
+}
+
+function syncPostDeleteToSupabase(postId: string) {
+  fetch(`/api/supabase/posts/${postId}`, {
+    method: 'DELETE'
+  }).catch(err => console.warn("Supabase background delete failed for post:", err));
+}
+
+function syncCategoryToSupabase(category: Category) {
+  fetch('/api/supabase/categories', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(category)
+  }).catch(err => console.warn("Supabase background sync failed for category:", err));
+}
+
+function syncCategoryDeleteToSupabase(catId: string) {
+  fetch(`/api/supabase/categories/${catId}`, {
+    method: 'DELETE'
+  }).catch(err => console.warn("Supabase background delete failed for category:", err));
+}
+
+function syncReelToSupabase(reel: InstagramReel) {
+  fetch('/api/supabase/reels', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(reel)
+  }).catch(err => console.warn("Supabase background sync failed for reel:", err));
+}
+
+function syncReelDeleteToSupabase(reelId: string) {
+  fetch(`/api/supabase/reels/${reelId}`, {
+    method: 'DELETE'
+  }).catch(err => console.warn("Supabase background delete failed for reel:", err));
+}
+
+export async function syncFromSupabase(): Promise<{ status: string; message?: string }> {
+  try {
+    const res = await fetch('/api/supabase/sync');
+    if (!res.ok) throw new Error("Failed to contact sync endpoint");
+    
+    const data = await res.json();
+    if (data.status === 'connected') {
+      const posts = data.posts || [];
+      const categories = data.categories || [];
+      const reels = data.reels || [];
+
+      if (posts.length > 0) {
+        localStorage.setItem(KEYS.POSTS, JSON.stringify(posts));
+      }
+      if (categories.length > 0) {
+        localStorage.setItem(KEYS.CATEGORIES, JSON.stringify(categories));
+      }
+      if (reels.length > 0) {
+        localStorage.setItem(KEYS.REELS, JSON.stringify(reels));
+      }
+
+      window.dispatchEvent(new Event('supabase-sync-completed'));
+      return { status: 'connected', message: 'Dados sincronizados do Supabase com sucesso.' };
+    }
+    return { status: data.status, message: data.message };
+  } catch (error: any) {
+    console.error("Error in syncFromSupabase:", error);
+    return { status: 'error', message: error.message };
+  }
+}
+
 
 // Auto initialisation of database tables
 export function initDB() {
@@ -164,6 +239,7 @@ export function savePost(postData: Partial<Post> & { title: string; content: str
   }
 
   saveTable(KEYS.POSTS, posts);
+  syncPostToSupabase(finalPost);
   return finalPost;
 }
 
@@ -171,6 +247,7 @@ export function deletePost(postId: string): boolean {
   const posts = getPosts();
   const filtered = posts.filter(p => p.id !== postId);
   saveTable(KEYS.POSTS, filtered);
+  syncPostDeleteToSupabase(postId);
   return posts.length !== filtered.length;
 }
 
@@ -192,6 +269,7 @@ export function duplicatePost(postId: string): Post | null {
   const posts = getPosts();
   posts.unshift(duplicated);
   saveTable(KEYS.POSTS, posts);
+  syncPostToSupabase(duplicated);
   return duplicated;
 }
 
@@ -201,6 +279,7 @@ export function incrementPostViews(postId: string) {
   if (index !== -1) {
     posts[index].views += 1;
     saveTable(KEYS.POSTS, posts);
+    syncPostToSupabase(posts[index]);
 
     // Also increment global daily charts
     incrementDailyAnalytics();
@@ -244,6 +323,7 @@ export function saveCategory(catData: Partial<Category> & { name: string; descri
   }
 
   saveTable(KEYS.CATEGORIES, cats);
+  syncCategoryToSupabase(finalCat);
   return finalCat;
 }
 
@@ -253,6 +333,7 @@ export function deleteCategory(id: string): boolean {
   if (cats.length <= 1) return false;
   const filtered = cats.filter(c => c.id !== id);
   saveTable(KEYS.CATEGORIES, filtered);
+  syncCategoryDeleteToSupabase(id);
   return cats.length !== filtered.length;
 }
 
@@ -499,6 +580,7 @@ export function saveReel(reelData: Partial<InstagramReel> & { title: string; vid
   }
 
   saveTable(KEYS.REELS, reels);
+  syncReelToSupabase(finalReel);
   return finalReel;
 }
 
@@ -506,5 +588,6 @@ export function deleteReel(id: string) {
   const reels = getTable<InstagramReel>(KEYS.REELS);
   const filtered = reels.filter(r => r.id !== id);
   saveTable(KEYS.REELS, filtered);
+  syncReelDeleteToSupabase(id);
 }
 

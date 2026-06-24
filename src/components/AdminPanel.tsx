@@ -78,7 +78,8 @@ import {
   logout,
   getReels,
   saveReel,
-  deleteReel
+  deleteReel,
+  syncFromSupabase
 } from '../utils/db';
 
 interface AdminPanelProps {
@@ -132,13 +133,57 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
     { title: 'Inovação em Nuvem Computacional', url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1200' },
   ];
 
+  // Supabase states for dashboard status and table creations
+  const [supabaseStatus, setSupabaseStatus] = useState<'unconfigured' | 'needs_schema' | 'connected' | 'error' | 'loading'>('loading');
+  const [supabaseMessage, setSupabaseMessage] = useState('');
+  const [supabaseTables, setSupabaseTables] = useState<Record<string, string>>({});
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const checkSupabaseStatus = async () => {
+    try {
+      const res = await fetch('/api/supabase/status');
+      if (res.ok) {
+        const data = await res.json();
+        setSupabaseStatus(data.status);
+        setSupabaseMessage(data.message || '');
+        setSupabaseTables(data.tables || {});
+      } else {
+        setSupabaseStatus('error');
+        setSupabaseMessage('Erro ao obter status do Supabase.');
+      }
+    } catch (err: any) {
+      setSupabaseStatus('error');
+      setSupabaseMessage(err.message || 'Erro de rede ao conectar.');
+    }
+  };
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    const result = await syncFromSupabase();
+    setIsSyncing(false);
+    checkSupabaseStatus();
+    loadDatabases();
+    alert(result.status === 'connected' ? 'Sincronização com o Supabase concluída!' : 'Aviso: ' + result.message);
+  };
+
   // Pull context indicators
   useEffect(() => {
     const session = getLoggedUser();
     if (session) {
       setCurrentUser(session);
       loadDatabases();
+      checkSupabaseStatus();
     }
+
+    const handleSyncComplete = () => {
+      loadDatabases();
+      checkSupabaseStatus();
+    };
+    window.addEventListener('supabase-sync-completed', handleSyncComplete);
+
+    return () => {
+      window.removeEventListener('supabase-sync-completed', handleSyncComplete);
+    };
   }, []);
 
   const loadDatabases = () => {
@@ -2123,6 +2168,162 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                 </h1>
                 <p className="text-xs text-luxury-gray-400 mt-1">Visualize e audite a integridade das tabelas relacionais do banco de dados Além do Bilhão.</p>
               </div>
+            </div>
+
+            {/* SUPABASE CONNECTION MANAGER */}
+            <div className="bg-luxury-gray-950 border border-luxury-gray-850 p-6 rounded-2xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <h3 className="font-serif font-black text-white text-xs uppercase tracking-wider text-gold-500 flex items-center gap-1.5">
+                    <Database size={14} />
+                    <span>Conexão do Supabase (Nuvem)</span>
+                  </h3>
+                  <p className="text-xs text-luxury-gray-400">
+                    Sincronize automaticamente os posts criados ou editados no Além do Bilhão diretamente com a sua conta do Supabase.
+                  </p>
+                </div>
+                <div>
+                  {supabaseStatus === 'connected' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      SUPABASE_CONECTADO
+                    </span>
+                  )}
+                  {supabaseStatus === 'needs_schema' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      REQUER_TABELAS_SQL
+                    </span>
+                  )}
+                  {supabaseStatus === 'unconfigured' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-luxury-gray-850 text-luxury-gray-400 border border-luxury-gray-700">
+                      SUPABASE_NAO_CONFIGURADO
+                    </span>
+                  )}
+                  {supabaseStatus === 'loading' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                      VERIFICANDO_CONEXAO...
+                    </span>
+                  )}
+                  {supabaseStatus === 'error' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                      ERRO_DE_CONEXAO
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {supabaseStatus === 'unconfigured' && (
+                <div className="bg-luxury-gray-900 border border-luxury-gray-850 p-4 rounded-xl space-y-3 text-xs leading-relaxed text-luxury-gray-300">
+                  <p>
+                    Para ativar a persistência em nuvem, configure as seguintes chaves de ambiente no menu de <strong>Configurações (Secrets) do AI Studio</strong>:
+                  </p>
+                  <ul className="list-disc pl-5 font-mono text-[10px] text-gold-400 space-y-1">
+                    <li>SUPABASE_URL="sua-url-do-supabase-aqui"</li>
+                    <li>SUPABASE_ANON_KEY="sua-chave-anon-aqui"</li>
+                  </ul>
+                  <p className="text-[10px] text-luxury-gray-400">
+                    Ao definir essas variáveis, o sistema começará a salvar seus posts de forma permanente na nuvem para evitar qualquer perda de dados.
+                  </p>
+                  <button
+                    onClick={checkSupabaseStatus}
+                    className="mt-2 inline-flex items-center gap-1 bg-luxury-gray-850 hover:bg-luxury-gray-800 border border-luxury-gray-700 px-3 py-1.5 rounded text-[11px] text-white font-bold transition cursor-pointer"
+                  >
+                    Verificar Novamente
+                  </button>
+                </div>
+              )}
+
+              {supabaseStatus === 'connected' && (
+                <div className="bg-emerald-950/10 border border-emerald-500/10 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+                  <div className="space-y-1">
+                    <p className="text-emerald-400 font-bold">Banco de Dados em Nuvem Ativo</p>
+                    <p className="text-luxury-gray-400 text-[11px]">
+                      Sua conexão com o Supabase está operacional. Toda criação ou atualização de artigos, categorias e reels feita por aqui está sincronizada.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleManualSync}
+                    disabled={isSyncing}
+                    className="whitespace-nowrap bg-emerald-500 hover:bg-emerald-600 text-luxury-gray-950 px-3 py-1.5 rounded text-xs font-black uppercase tracking-wider transition disabled:opacity-50 cursor-pointer"
+                  >
+                    {isSyncing ? "Sincronizando..." : "Sincronizar Agora"}
+                  </button>
+                </div>
+              )}
+
+              {supabaseStatus === 'needs_schema' && (
+                <div className="bg-luxury-gray-900 border border-luxury-gray-850 p-5 rounded-xl space-y-4 text-xs">
+                  <div className="space-y-1">
+                    <p className="text-amber-400 font-bold">Criação de Tabelas Requerida</p>
+                    <p className="text-luxury-gray-400 text-[11px]">
+                      O Supabase está conectado, mas não encontrou as tabelas <strong>categories</strong>, <strong>posts</strong> e <strong>reels</strong>. Copie o script SQL abaixo e cole no seu <strong>SQL Editor do Supabase</strong> para habilitar a sincronização:
+                    </p>
+                  </div>
+
+                  <div className="relative">
+                    <pre className="text-[10px] text-green-400 font-mono bg-luxury-gray-950 p-4 rounded-lg overflow-x-auto max-h-48 leading-relaxed select-all">
+{`-- 1. Tabela de Categorias
+create table if not exists categories (
+  id text primary key,
+  name text not null,
+  slug text not null,
+  description text
+);
+
+-- 2. Tabela de Posts / Artigos
+create table if not exists posts (
+  id text primary key,
+  title text not null,
+  slug text not null unique,
+  summary text,
+  content text,
+  image_url text,
+  video_url text,
+  category_id text references categories(id) on delete set null,
+  author_id text,
+  tags text[],
+  status text not null,
+  views integer default 0,
+  published_at timestamp with time zone,
+  created_at timestamp with time zone default now(),
+  reading_time integer default 1,
+  layout_position text,
+  is_exclusive boolean default false
+);
+
+-- 3. Tabela de Instagram Reels
+create table if not exists reels (
+  id text primary key,
+  title text not null,
+  video_url text not null,
+  image_url text not null,
+  username text default '@alemdobilhao',
+  avatar_url text,
+  views_count text default '10K',
+  likes_count text default '1.1K',
+  created_at timestamp with time zone default now()
+);`}
+                    </pre>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={checkSupabaseStatus}
+                      className="bg-gold-500 hover:bg-gold-600 text-luxury-gray-950 font-bold px-4 py-2 rounded text-[11px] transition cursor-pointer"
+                    >
+                      Já Executei o Script! Verificar Conexão
+                    </button>
+                    <button
+                      onClick={handleManualSync}
+                      disabled={isSyncing}
+                      className="bg-luxury-gray-850 hover:bg-luxury-gray-800 text-luxury-gray-300 px-3 py-2 rounded text-[11px] transition cursor-pointer"
+                    >
+                      {isSyncing ? "Sincronizando..." : "Sincronizar Forçado"}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* TAB SELECTOR */}

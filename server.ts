@@ -1,12 +1,310 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Initialize Supabase Client securely on the server-side
+const supabaseUrl = process.env.SUPABASE_URL || "";
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || "";
+
+let supabase: any = null;
+if (supabaseUrl && supabaseAnonKey) {
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    console.log("Supabase Client initialized successfully on Server.");
+  } catch (err) {
+    console.error("Failed to initialize Supabase Client:", err);
+  }
+} else {
+  console.log("Supabase is unconfigured. Running in Local Storage Fallback mode.");
+}
+
+// Relational DB field converters (snake_case database columns to camelCase typescript fields)
+function mapPostToDb(p: any) {
+  return {
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    summary: p.summary || "",
+    content: p.content || "",
+    image_url: p.imageUrl || "",
+    video_url: p.videoUrl || "",
+    category_id: p.categoryId,
+    author_id: p.authorId,
+    tags: p.tags || [],
+    status: p.status || "draft",
+    views: p.views || 0,
+    published_at: p.publishedAt ? new Date(p.publishedAt).toISOString() : null,
+    created_at: p.createdAt ? new Date(p.createdAt).toISOString() : new Date().toISOString(),
+    reading_time: p.readingTime || 1,
+    layout_position: p.layoutPosition || "meio",
+    is_exclusive: p.isExclusive || false
+  };
+}
+
+function mapPostFromDb(p: any) {
+  return {
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    summary: p.summary || "",
+    content: p.content || "",
+    imageUrl: p.image_url || "",
+    videoUrl: p.video_url || "",
+    categoryId: p.category_id,
+    authorId: p.author_id,
+    tags: p.tags || [],
+    status: p.status || "draft",
+    views: p.views || 0,
+    publishedAt: p.published_at || "",
+    createdAt: p.created_at || "",
+    readingTime: p.reading_time || 1,
+    layoutPosition: p.layout_position || "meio",
+    isExclusive: p.is_exclusive || false
+  };
+}
+
+function mapCategoryToDb(c: any) {
+  return {
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    description: c.description || ""
+  };
+}
+
+function mapCategoryFromDb(c: any) {
+  return {
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    description: c.description || ""
+  };
+}
+
+function mapReelToDb(r: any) {
+  return {
+    id: r.id,
+    title: r.title,
+    video_url: r.videoUrl || "",
+    image_url: r.imageUrl || "",
+    username: r.username || "@alemdobilhao",
+    avatar_url: r.avatarUrl || "",
+    views_count: r.viewsCount || "10K",
+    likes_count: r.likesCount || "",
+    created_at: r.createdAt ? new Date(r.createdAt).toISOString() : new Date().toISOString()
+  };
+}
+
+function mapReelFromDb(r: any) {
+  return {
+    id: r.id,
+    title: r.title,
+    videoUrl: r.video_url || "",
+    imageUrl: r.image_url || "",
+    username: r.username || "@alemdobilhao",
+    avatarUrl: r.avatar_url || "",
+    viewsCount: r.views_count || "10K",
+    likesCount: r.likes_count || "",
+    createdAt: r.created_at || ""
+  };
+}
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Add JSON Body Parser middleware to accept payload requests
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // --- SUPABASE API INTEGRATION ENDPOINTS ---
+
+  // Check Connection status and return schema/connection diagnostics
+  app.get("/api/supabase/status", async (req, res) => {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return res.json({
+        status: "unconfigured",
+        message: "As variáveis de ambiente SUPABASE_URL e SUPABASE_ANON_KEY não foram preenchidas nas configurações do AI Studio."
+      });
+    }
+
+    try {
+      // Test queries to check table availability
+      const results: Record<string, string> = {
+        posts: "not_found",
+        categories: "not_found",
+        reels: "not_found"
+      };
+
+      // Check posts
+      const { error: postErr } = await supabase.from('posts').select('id').limit(1);
+      if (!postErr) results.posts = "ok";
+      else if (postErr.code !== 'PGRST116' && !postErr.message.includes('does not exist')) {
+        results.posts = "error: " + postErr.message;
+      }
+
+      // Check categories
+      const { error: catErr } = await supabase.from('categories').select('id').limit(1);
+      if (!catErr) results.categories = "ok";
+      else if (catErr.code !== 'PGRST116' && !catErr.message.includes('does not exist')) {
+        results.categories = "error: " + catErr.message;
+      }
+
+      // Check reels
+      const { error: reelErr } = await supabase.from('reels').select('id').limit(1);
+      if (!reelErr) results.reels = "ok";
+      else if (reelErr.code !== 'PGRST116' && !reelErr.message.includes('does not exist')) {
+        results.reels = "error: " + reelErr.message;
+      }
+
+      const needsSchema = results.posts === "not_found" || results.categories === "not_found" || results.reels === "not_found";
+
+      return res.json({
+        status: needsSchema ? "needs_schema" : "connected",
+        url: supabaseUrl,
+        tables: results,
+        message: needsSchema 
+          ? "Supabase conectado, mas as tabelas ainda não foram criadas. Clique no botão de Configuração para ver o script SQL necessário."
+          : "Supabase conectado com sucesso e integrado ao banco de dados local!"
+      });
+    } catch (error: any) {
+      return res.json({
+        status: "error",
+        message: "Erro ao tentar conectar ao Supabase: " + error.message
+      });
+    }
+  });
+
+  // Pull all data from Supabase to sync local storage on application mount
+  app.get("/api/supabase/sync", async (req, res) => {
+    if (!supabase) {
+      return res.json({ status: "unconfigured", posts: [], categories: [], reels: [] });
+    }
+
+    try {
+      const { data: categories, error: catError } = await supabase.from('categories').select('*');
+      if (catError) throw catError;
+
+      const { data: posts, error: postError } = await supabase.from('posts').select('*');
+      if (postError) throw postError;
+
+      const { data: reels, error: reelError } = await supabase.from('reels').select('*');
+      if (reelError) {
+        // Fallback for older databases if reels table is absent
+        console.warn("Reels table not found, ignoring reels sync");
+      }
+
+      res.json({
+        status: "connected",
+        posts: (posts || []).map(mapPostFromDb),
+        categories: (categories || []).map(mapCategoryFromDb),
+        reels: (reels || []).map(mapReelFromDb)
+      });
+    } catch (error: any) {
+      console.warn("Supabase sync warning (likely missing tables):", error.message);
+      res.json({
+        status: "needs_schema",
+        message: error.message,
+        posts: [],
+        categories: [],
+        reels: []
+      });
+    }
+  });
+
+  // Save/Update Post
+  app.post("/api/supabase/posts", async (req, res) => {
+    if (!supabase) return res.status(400).json({ error: "Supabase unconfigured" });
+    try {
+      const post = req.body;
+      const mapped = mapPostToDb(post);
+      const { error } = await supabase.from('posts').upsert(mapped);
+      if (error) throw error;
+      res.json({ success: true, post: mapPostFromDb(mapped) });
+    } catch (error: any) {
+      console.error("Error upserting post to Supabase:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete Post
+  app.delete("/api/supabase/posts/:id", async (req, res) => {
+    if (!supabase) return res.status(400).json({ error: "Supabase unconfigured" });
+    try {
+      const { id } = req.params;
+      const { error } = await supabase.from('posts').delete().eq('id', id);
+      if (error) throw error;
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting post from Supabase:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Save/Update Category
+  app.post("/api/supabase/categories", async (req, res) => {
+    if (!supabase) return res.status(400).json({ error: "Supabase unconfigured" });
+    try {
+      const category = req.body;
+      const mapped = mapCategoryToDb(category);
+      const { error } = await supabase.from('categories').upsert(mapped);
+      if (error) throw error;
+      res.json({ success: true, category: mapCategoryFromDb(mapped) });
+    } catch (error: any) {
+      console.error("Error upserting category to Supabase:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete Category
+  app.delete("/api/supabase/categories/:id", async (req, res) => {
+    if (!supabase) return res.status(400).json({ error: "Supabase unconfigured" });
+    try {
+      const { id } = req.params;
+      const { error } = await supabase.from('categories').delete().eq('id', id);
+      if (error) throw error;
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting category from Supabase:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Save/Update Instagram Reel
+  app.post("/api/supabase/reels", async (req, res) => {
+    if (!supabase) return res.status(400).json({ error: "Supabase unconfigured" });
+    try {
+      const reel = req.body;
+      const mapped = mapReelToDb(reel);
+      const { error } = await supabase.from('reels').upsert(mapped);
+      if (error) throw error;
+      res.json({ success: true, reel: mapReelFromDb(mapped) });
+    } catch (error: any) {
+      console.error("Error upserting reel to Supabase:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete Instagram Reel
+  app.delete("/api/supabase/reels/:id", async (req, res) => {
+    if (!supabase) return res.status(400).json({ error: "Supabase unconfigured" });
+    try {
+      const { id } = req.params;
+      const { error } = await supabase.from('reels').delete().eq('id', id);
+      if (error) throw error;
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting reel from Supabase:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // HG Fallbacks to match the user's attachment exactly if API is closed/fails
+
   const fallbacks: Record<string, { price: number, prevClose: number }> = {
     '^BVSP': { price: 115230, prevClose: 116972 }, // -1.49% approx
     'BBDC4.SA': { price: 17.80, prevClose: 17.68 }, // +0.68%

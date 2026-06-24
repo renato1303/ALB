@@ -17,7 +17,8 @@ import {
   getPosts, 
   getCategories, 
   initDB, 
-  getLoggedUser 
+  getLoggedUser,
+  syncFromSupabase
 } from './utils/db';
 import { 
   TrendingUp, 
@@ -44,6 +45,16 @@ export default function App() {
   useEffect(() => {
     initDB();
     reloadDatasets();
+
+    // Trigger asynchronous download sync from Supabase on start
+    syncFromSupabase().then(() => {
+      reloadDatasets();
+    });
+
+    const handleSyncComplete = () => {
+      reloadDatasets();
+    };
+    window.addEventListener('supabase-sync-completed', handleSyncComplete);
 
     // Catch routing dynamically via popstate (browser back/forward) & hashes
     const handleUrlAndHashRouting = () => {
@@ -93,6 +104,7 @@ export default function App() {
       window.removeEventListener('hashchange', handleUrlAndHashRouting);
       window.removeEventListener('popstate', handleUrlAndHashRouting);
       window.removeEventListener('auth-session-modified', handleAuthMod);
+      window.removeEventListener('supabase-sync-completed', handleSyncComplete);
     };
   }, []);
 
