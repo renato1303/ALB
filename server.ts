@@ -491,6 +491,11 @@ async function startServer() {
   // Serve static images directory
   app.use('/images', express.static(path.join(process.cwd(), 'public', 'images')));
 
+  // Route /favicon.ico to the logo
+  app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'public', 'images', 'logo_alb.jpg'));
+  });
+
   // Serve static assets or mount Vite middleware
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

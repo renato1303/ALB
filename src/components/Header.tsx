@@ -212,7 +212,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
       </div>
 
       {/* 2. MAIN BRAND HEADER */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-2 lg:py-2.5 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-1.5 lg:py-2 flex items-center justify-between">
         
         {/* Toggle Mobile Menu Button */}
         <button
@@ -227,7 +227,7 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
         {/* LOGO: ALÉM DO BILHÃO (Image replacing text with seamless design) */}
         <div 
           onClick={() => { onNavigate('home'); onSearch(''); }}
-          className="flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 h-10 md:h-12 lg:h-14"
+          className="flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 h-12 md:h-[56px] lg:h-[68px]"
         >
           <img 
             src="/images/logo_alb.jpg" 
