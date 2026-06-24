@@ -224,15 +224,15 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* LOGO: ALÉM DO BILHÃO (Image replacing text with seamless design and clean zoom) */}
+        {/* LOGO: ALÉM DO BILHÃO (Image replacing text with seamless design) */}
         <div 
           onClick={() => { onNavigate('home'); onSearch(''); }}
-          className="relative flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 overflow-hidden h-10 md:h-12 lg:h-14 w-52 md:w-64 lg:w-80"
+          className="flex items-center justify-start cursor-pointer select-none ml-2 mr-auto lg:ml-0 lg:mr-0 h-10 md:h-12 lg:h-14"
         >
           <img 
             src="/images/logo_alb.jpg" 
             alt="Além do Bilhão" 
-            className="absolute left-0 max-w-none h-full w-auto object-contain scale-[1.8] md:scale-[1.9] lg:scale-[2.1] origin-left transition-all duration-300 hover:scale-[2.2]"
+            className="h-full w-auto object-contain transition-all duration-300 hover:scale-[1.03]"
             referrerPolicy="no-referrer"
           />
         </div>
