@@ -9,7 +9,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'user_1',
     name: 'José Lins',
-    email: 'jose.lins@alemdobilhao.com',
+    email: 'contatoalemdobilhao@gmail.com',
     passwordHash: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password '123456' mockup
     role: 'Super Admin',
     avatarUrl: '/joselins.png',

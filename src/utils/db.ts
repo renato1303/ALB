@@ -568,8 +568,8 @@ export function login(email: string, passwordPlain: string): { success: boolean;
     return { success: false, error: 'Esta conta administrativa está atualmente inativa.' };
   }
 
-  // Support plain text match or standard pre-seeded admin key '123456'
-  if (passwordPlain === '123456' || passwordPlain === found.passwordHash) {
+  // Support plain text match or standard pre-seeded admin key '@Senha123ALB' / '123456'
+  if (passwordPlain === '@Senha123ALB' || passwordPlain === '123456' || passwordPlain === found.passwordHash) {
     setLoggedUser(found);
     return { success: true, user: found };
   }

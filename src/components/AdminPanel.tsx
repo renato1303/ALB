@@ -99,8 +99,8 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Login Form states
-  const [email, setEmail] = useState('contatolinkagencia@gmail.com'); // Prefilled for instant developer eval
-  const [password, setPassword] = useState('123456'); // Default pre-seeded password
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [recoverySent, setRecoverySent] = useState(false);
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
@@ -680,12 +680,6 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
                   <label className="text-[10px] text-luxury-gray-400 font-mono uppercase tracking-wider">Senha de Segurança *</label>
-                  <span 
-                    onClick={() => setShowRecoveryForm(true)}
-                    className="text-[10px] text-luxury-gray-500 hover:text-gold-400 cursor-pointer transition"
-                  >
-                    Esqueceu?
-                  </span>
                 </div>
                 <input
                   id="inp-admin-password"
@@ -708,13 +702,9 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
               </button>
 
               <div className="text-center pt-4">
-                <p className="text-[10px] text-luxury-gray-500 leading-relaxed">
-                  Sandbox de visualização com preenchimento automático ativo.<br/>
-                  Senha de demonstração padrão: <span className="text-gold-400 font-semibold">123456</span>
-                </p>
                 <span 
                   onClick={() => onNavigate('home')}
-                  className="inline-block text-xs text-gold-400 hover:text-gold-500 font-medium mt-4 cursor-pointer underline"
+                  className="inline-block text-xs text-gold-400 hover:text-gold-500 font-medium mt-2 cursor-pointer underline"
                 >
                   ← Voltar para o Portal Público
                 </span>
