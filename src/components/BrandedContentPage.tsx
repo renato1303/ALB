@@ -29,7 +29,7 @@ interface BrandedContentPageProps {
 }
 
 // Configuração do WhatsApp da Empresa (Fácil de alterar)
-export const WHATSAPP_NUMBER = "5511987654321";
+export const WHATSAPP_NUMBER = "5521972736030";
 
 export default function BrandedContentPage({ onNavigate }: BrandedContentPageProps) {
   // SEO title & meta sync

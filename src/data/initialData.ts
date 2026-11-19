@@ -12,7 +12,7 @@ export const INITIAL_USERS: User[] = [
     email: 'jose.lins@alemdobilhao.com',
     passwordHash: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password '123456' mockup
     role: 'Super Admin',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: '/joselins.png',
     bio: 'Editor-chefe e colunista sênior de negócios, macroeconomia e estratégias corporativas globais no Além do Bilhão.',
     active: true,
     createdAt: '2026-01-01T08:00:00Z'
@@ -23,7 +23,7 @@ export const INITIAL_USERS: User[] = [
     email: 'allan.lucas@alemdobilhao.com',
     passwordHash: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password '123456' mockup
     role: 'Editor',
-    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150',
+    avatarUrl: '/allanlucas.jpg',
     bio: 'Analista sênior de tecnologia, investimentos de risco e inovação financeira no Além do Bilhão.',
     active: true,
     createdAt: '2026-02-15T09:30:00Z'

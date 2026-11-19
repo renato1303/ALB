@@ -111,13 +111,13 @@ export async function syncFromSupabase(): Promise<{ status: string; message?: st
 // Auto initialisation of database tables
 export function initDB() {
   // One-time forced reset of posts, comments, media, and users to ensure only José Lins and Allan Lucas are present
-  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v9')) {
+  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v10')) {
     localStorage.setItem(KEYS.POSTS, JSON.stringify(INITIAL_POSTS));
     localStorage.setItem(KEYS.USERS, JSON.stringify(INITIAL_USERS));
     localStorage.setItem(KEYS.COMMENTS, JSON.stringify([]));
     localStorage.setItem(KEYS.MEDIA, JSON.stringify(INITIAL_MEDIA));
     localStorage.setItem(KEYS.REELS, JSON.stringify(INITIAL_INSTAGRAM_REELS));
-    localStorage.setItem('ab_db_force_reset_clean_slate_v9', 'true');
+    localStorage.setItem('ab_db_force_reset_clean_slate_v10', 'true');
   }
 
   // Force pre-logged admin clear once to ensure guest view is active by default
