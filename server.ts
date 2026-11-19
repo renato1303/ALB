@@ -113,6 +113,16 @@ function mapReelFromDb(r: any) {
   };
 }
 
+function handleSupabaseError(error: any, res: any, context: string) {
+  const isFetchFailed = error.message?.includes("fetch failed") || error.message?.includes("ENOTFOUND") || error.code === 'ENOTFOUND';
+  if (isFetchFailed) {
+    console.log(`Supabase offline during ${context} (fetch failed). Operating in local storage mode.`);
+    return res.json({ success: true, offline: true, message: "Supabase offline, saved to local storage" });
+  }
+  console.error(`Error ${context}:`, error);
+  return res.status(500).json({ error: error.message });
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
@@ -195,7 +205,7 @@ async function startServer() {
       const { data: reels, error: reelError } = await supabase.from('reels').select('*');
       if (reelError) {
         // Fallback for older databases if reels table is absent
-        console.warn("Reels table not found, ignoring reels sync");
+        console.log("Reels table not found, ignoring reels sync");
       }
 
       res.json({
@@ -205,7 +215,12 @@ async function startServer() {
         reels: (reels || []).map(mapReelFromDb)
       });
     } catch (error: any) {
-      console.warn("Supabase sync warning (likely missing tables):", error.message);
+      const isFetchFailed = error.message?.includes("fetch failed");
+      if (isFetchFailed) {
+        console.log("Supabase connection unavailable (fetch failed). Operating in local storage mode.");
+      } else {
+        console.log("Supabase sync issue (tables might be missing):", error.message);
+      }
       res.json({
         status: "needs_schema",
         message: error.message,
@@ -251,8 +266,7 @@ async function startServer() {
       if (error) throw error;
       res.json({ success: true, post: mapPostFromDb(mapped) });
     } catch (error: any) {
-      console.error("Error upserting post to Supabase:", error);
-      res.status(500).json({ error: error.message });
+      return handleSupabaseError(error, res, "upserting post to Supabase");
     }
   });
 
@@ -265,8 +279,7 @@ async function startServer() {
       if (error) throw error;
       res.json({ success: true });
     } catch (error: any) {
-      console.error("Error deleting post from Supabase:", error);
-      res.status(500).json({ error: error.message });
+      return handleSupabaseError(error, res, "deleting post from Supabase");
     }
   });
 
@@ -280,8 +293,7 @@ async function startServer() {
       if (error) throw error;
       res.json({ success: true, category: mapCategoryFromDb(mapped) });
     } catch (error: any) {
-      console.error("Error upserting category to Supabase:", error);
-      res.status(500).json({ error: error.message });
+      return handleSupabaseError(error, res, "upserting category to Supabase");
     }
   });
 
@@ -294,8 +306,7 @@ async function startServer() {
       if (error) throw error;
       res.json({ success: true });
     } catch (error: any) {
-      console.error("Error deleting category from Supabase:", error);
-      res.status(500).json({ error: error.message });
+      return handleSupabaseError(error, res, "deleting category from Supabase");
     }
   });
 
@@ -309,8 +320,7 @@ async function startServer() {
       if (error) throw error;
       res.json({ success: true, reel: mapReelFromDb(mapped) });
     } catch (error: any) {
-      console.error("Error upserting reel to Supabase:", error);
-      res.status(500).json({ error: error.message });
+      return handleSupabaseError(error, res, "upserting reel to Supabase");
     }
   });
 
@@ -323,8 +333,7 @@ async function startServer() {
       if (error) throw error;
       res.json({ success: true });
     } catch (error: any) {
-      console.error("Error deleting reel from Supabase:", error);
-      res.status(500).json({ error: error.message });
+      return handleSupabaseError(error, res, "deleting reel from Supabase");
     }
   });
 

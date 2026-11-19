@@ -8,36 +8,25 @@ import { User, Category, Tag, Post, Comment, MediaFile, DailyAnalytics, Instagra
 export const INITIAL_USERS: User[] = [
   {
     id: 'user_1',
-    name: 'Bruno Ramos',
-    email: 'contatolinkagencia@gmail.com', // Pre-configured Super Admin based on viewer metadata
+    name: 'José Lins',
+    email: 'jose.lins@alemdobilhao.com',
     passwordHash: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password '123456' mockup
     role: 'Super Admin',
-    avatarUrl: '',
-    bio: 'Fundador e Diretor de Redação do Além do Bilhão. Investidor de risco e entusiasta de inovação no mercado latino-americano.',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
+    bio: 'Editor-chefe e colunista sênior de negócios, macroeconomia e estratégias corporativas globais no Além do Bilhão.',
     active: true,
     createdAt: '2026-01-01T08:00:00Z'
   },
   {
     id: 'user_2',
-    name: 'Mariana Alencar',
-    email: 'mariana.alencar@alemdobilhao.com',
-    passwordHash: '123456',
+    name: 'Allan Lucas',
+    email: 'allan.lucas@alemdobilhao.com',
+    passwordHash: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password '123456' mockup
     role: 'Editor',
-    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150',
-    bio: 'Editora-chefe especializada em Macroeconomia, fusões e aquisições (M&A). Ex-analista sênior de investimentos.',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150',
+    bio: 'Analista sênior de tecnologia, investimentos de risco e inovação financeira no Além do Bilhão.',
     active: true,
     createdAt: '2026-02-15T09:30:00Z'
-  },
-  {
-    id: 'user_3',
-    name: 'Roberto Kovac',
-    email: 'roberto.kovac@alemdobilhao.com',
-    passwordHash: '123456',
-    role: 'Autor',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
-    bio: 'Correspondente de tecnologia e startups. Escreve sobre inteligência artificial, web3 e scaleups brasileiras.',
-    active: true,
-    createdAt: '2026-03-20T10:15:00Z'
   }
 ];
 
@@ -120,13 +109,13 @@ export const INITIAL_POSTS: Post[] = [
     content: `<p>O cenário corporativo na América Latina está passando por uma das transições mais intensas de sua história recente. Em 2026, com a consolidação da estabilização monetária e a busca agressiva por sinergias operacionais, presenciamos uma onda sem precedentes de fusões e aquisições (M&As) que cruzam fronteiras tradicionais e envolvem transações com valores superiores a dez dígitos.</p>
 <h4>Consolidação de Setores Tradicionais</h4>
 <p>Os setores de infraestrutura, concessões rodoviárias e energia lideram o apetite de grandes holdings de investimento. A necessidade de digitalizar canais operacionais e descarbonizar portfólios tem forçado players nacionais a buscarem parcerias com consórcios globais que possuem custo de capital mais favorável.</p>
-<blockquote>"Não se trata apenas de expandir a participação de mercado, mas de adquirir competências em sustentabilidade e eficiência robótica para mitigar as contingências operacionais do final da década." – afirma Bruno Ramos, analista-geral do Além do Bilhão.</blockquote>
+<blockquote>"Não se trata apenas de expandir a participação de mercado, mas de adquirir competências em sustentabilidade e eficiência robótica para mitigar as contingências operacionais do final da década." – afirma José Lins, analista-geral do Além do Bilhão.</blockquote>
 <h4>A Resiliência do Venture Capital Sênior</h4>
 <p>Diferente do frenesi puramente especulativo do início dos anos 2020, o Venture Capital foca agora em scaleups que comprovam lucro líquido sustentável e cashflow equilibrado. Startups brasileiras, mexicanas e colombianas de software como serviço (SaaS) e transações industriais integradas tornaram-se alvos preferenciais para consolidadoras globais.</p>
 <p>O resultado é um ecossistema mais racional, onde as sinergias corporativas impulsionam margens operacionais mais limpas, desenhando a arquitetura financeira da região para os próximos vinte anos.</p>`,
     imageUrl: '/images/post_ma_latin_america.jpg',
     categoryId: 'cat_1', // Negócios
-    authorId: 'user_1',
+    authorId: 'user_1', // José Lins
     tags: ['Inteligência Artificial', 'Venture Capital', 'M&A'],
     status: 'published',
     views: 12543,
@@ -148,7 +137,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>Contudo, analistas apontam que a desvalorização das cotas abre janelas raras de entrada para investidores de longo prazo (value investing). Ativos de alta qualidade com contratos indexados à inflação (IPCA) e inquilinos multinacionais operando em contratos "Built to Suit" atípicos agora estão sendo negociados abaixo de seu valor real de reposição de tijolo, representando um excelente desconto patrimonial.</p>`,
     imageUrl: '/images/post_fed_rates_fiis.jpg',
     categoryId: 'cat_3', // Investimentos
-    authorId: 'user_2',
+    authorId: 'user_2', // Allan Lucas
     tags: ['Selic', 'ESG'],
     status: 'published',
     views: 8930,
@@ -167,10 +156,10 @@ export const INITIAL_POSTS: Post[] = [
 <p>A explosão na demanda por Inteligência Artificial generativa corporativa elevou as especificações de hardware ao extremo. Chips de altíssima densidade de transistores, fabricados majoritariamente pela taiwanesa TSMC sob patentes holandesas da ASML, tornaram-se itens de segurança nacional.</p>
 <p>Estados Unidos, China e União Europeia aportaram, juntos, mais de 250 bilhões de dólares em subsídios de manufatura doméstica. O objetivo é reduzir a dependência logística extrema de Taiwan, uma das zonas de maior atrito geopolítico contemporâneo.</p>
 <h4>Sons do Amanhã: Sinais de Alerta</h4>
-<p>Para além da ficção de ficção científica, os semicondutores influenciam diretamente a inflação industrial. Componentes mais caros geram reajustes em cascata na indústria automotiva, in datacenters globais e até em equipamentos médicos complexos. Quem detiver a maior infraestrutura de processamento dominará o vetor de produtividade industrial do século.</p>`,
+<p>Para além da ficção de ficção científica, os semicondutores influenciam diretamente a inflação industrial. Componentes mais caros geram reajustes em cascata na indústria automotiva, em datacenters globais e até em equipamentos médicos complexos. Quem detiver a maior infraestrutura de processamento dominará o vetor de produtividade industrial do século.</p>`,
     imageUrl: '/images/post_semiconductors.jpg',
     categoryId: 'cat_4', // Tecnologia
-    authorId: 'user_3',
+    authorId: 'user_1', // José Lins
     tags: ['Inteligência Artificial', 'Fintech'],
     status: 'published',
     views: 11421,
@@ -191,7 +180,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>Dessa forma, as famílias mantêm seu legado intocado sob custódia, diversificando os investimentos imobiliários originais em ativos líquidos internacionais, infraestrutura privada e private equity.</p>`,
     imageUrl: '/images/post_family_office_succession.jpg',
     categoryId: 'cat_6', // Liderança
-    authorId: 'user_1',
+    authorId: 'user_2', // Allan Lucas
     tags: ['ESG', 'M&A'],
     status: 'published',
     views: 7421,
@@ -211,7 +200,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>São Paulo se consagra como o epicentro deste rali de final de ano, conectando investidores americanos com as fintechs e logtechs que se preparavam e enxugavam suas operações desde 2023.</p>`,
     imageUrl: '/images/post_unicorns_sp.jpg',
     categoryId: 'cat_5', // Startups
-    authorId: 'user_3',
+    authorId: 'user_1', // José Lins
     tags: ['Venture Capital', 'Unicórnios'],
     status: 'published',
     views: 4890,
@@ -224,12 +213,12 @@ export const INITIAL_POSTS: Post[] = [
     id: 'post_6',
     title: 'Crédito Privado Bate Recorde de Emissões de Debêntures Incentivadas',
     slug: 'credito-privado-bate-recorde-de-emissoes-de-debentures-incentivadas',
-    summary: 'A busca por isenção fiscal e rendimentos atrativos canaliza recursos para os de investimentos em saneamento básico e ferrovias.',
+    summary: 'A busca por isenção fiscal e rendimentos atrativos canaliza recursos para os investimentos em saneamento básico e ferrovias.',
     content: `<p>A atratividade do crédito privado no Brasil alcançou novos patamares históricos neste semestre. Com as taxas de juros de mercado mantendo prêmios consistentes, as empresas de saneamento e infraestrutura encontraram nas debêntures de projeto incentivadas o instrumento perfeito de captação de recursos de baixo custo junto ao varejo de alta renda.</p>
 <p>As debêntures contam com isenção total de imposto de renda para pessoas físicas no Brasil, o que as torna ativos de resiliência formidável em momentos de ajuste tributário federal, oferecendo prêmios robustos acima do IPCA mais recentes.</p>`,
     imageUrl: '/images/post_credit_debentures.jpg',
     categoryId: 'cat_2', // Mercado
-    authorId: 'user_2',
+    authorId: 'user_2', // Allan Lucas
     tags: ['Selic', 'ESG'],
     status: 'published',
     views: 5210,
@@ -248,7 +237,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>A liderança sênior da Techcorp redesenhou todas as linhas de operação de desenvolvimento utilizando um framework adaptado de engenharia organizacional científica. A descentralização de decisões guiada puramente por inteligência de dados históricos garantiu o corte sistemático de custos desperdiçados e o redirecionamento de capital humano para projetos com retorno operacional comprovado de alto valor.</p>`,
     imageUrl: '/images/post_techcorp_management.jpg',
     categoryId: 'cat_6', // Liderança
-    authorId: 'user_2',
+    authorId: 'user_1', // José Lins
     tags: ['ESG'],
     status: 'published',
     views: 3120,
@@ -267,7 +256,7 @@ export const INITIAL_POSTS: Post[] = [
 <p>Agentes dotados de visão de mercado avançada processam em milissegundos balanços contábeis, notas regulatórias da CVM e discursos das autoridades econômicas globais. Tais relatórios são consolidados para que gestores de patrimônios exclusivos possam calibrar posições em tempo recorde, minimizando perdas inesperadas e antecipando movimentos de bolhas.</p>`,
     imageUrl: '/images/post_wealth_management_ai.jpg',
     categoryId: 'cat_4', // Tecnologia
-    authorId: 'user_3',
+    authorId: 'user_2', // Allan Lucas
     tags: ['Inteligência Artificial', 'Fintech'],
     status: 'published',
     views: 4567,
@@ -350,4 +339,3 @@ export const INITIAL_INSTAGRAM_REELS: InstagramReel[] = [
     createdAt: new Date().toISOString()
   }
 ];
-

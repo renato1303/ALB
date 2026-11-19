@@ -38,7 +38,8 @@ import {
   Instagram,
   ExternalLink,
   X,
-  User as UserIcon
+  User as UserIcon,
+  Target
 } from 'lucide-react';
 
 // Recharts imports for the premium analytics view
@@ -81,7 +82,9 @@ import {
   saveReel,
   deleteReel,
   syncFromSupabase,
-  saveImportedReels
+  saveImportedReels,
+  getBrandedLeads,
+  BrandedLead
 } from '../utils/db';
 
 interface AdminPanelProps {
@@ -111,6 +114,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
   const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [analytics, setAnalytics] = useState<any[]>([]);
+  const [brandedLeads, setBrandedLeads] = useState<BrandedLead[]>([]);
 
   // Search/Filter states inside CMS
   const [postSearch, setPostSearch] = useState('');
@@ -246,6 +250,7 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
     setMediaFiles(getMedia());
     setUsers(getUsers());
     setAnalytics(getAnalytics());
+    setBrandedLeads(getBrandedLeads());
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -874,6 +879,19 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
               <span>Instagram Reels</span>
               <span className="ml-auto bg-luxury-gray-900 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                 {instagramReels.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab('leads'); setEditingPost(null); setMobileMenuOpen(false); }}
+              className={`flex items-center gap-2 px-3 py-2.5 rounded transition font-medium ${
+                activeTab === 'leads' ? 'bg-gold-500 text-luxury-gray-950 font-bold' : 'hover:bg-luxury-gray-900 text-luxury-gray-300'
+              }`}
+            >
+              <Target size={14} className="text-gold-400" />
+              <span>Leads Branded Content</span>
+              <span className="ml-auto bg-luxury-gray-900 text-gold-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold">
+                {brandedLeads.length}
               </span>
             </button>
 
@@ -2259,6 +2277,98 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
                   </div>
                 </div>
 
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 8: BRANDED CONTENT LEADS */}
+        {activeTab === 'leads' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="flex items-center justify-between border-b border-luxury-gray-900 pb-5">
+              <div>
+                <h1 className="font-serif font-black text-2xl text-white uppercase tracking-tight flex items-center gap-2">
+                  <Target size={20} className="text-gold-500" />
+                  <span>Leads Comerciais de Branded Content</span>
+                </h1>
+                <p className="text-xs text-luxury-gray-400 mt-1">Empresas e executivos interessados em campanhas publicitárias e projetos personalizados.</p>
+              </div>
+              <span className="bg-luxury-gray-900 border border-luxury-gray-850 px-3 py-1 rounded text-xs font-mono font-bold text-gold-400">
+                {brandedLeads.length} leads cadastrados
+              </span>
+            </div>
+
+            {brandedLeads.length === 0 ? (
+              <div className="bg-luxury-gray-950 border border-luxury-gray-850 rounded-2xl p-12 text-center space-y-4">
+                <Target size={36} className="text-luxury-gray-650 mx-auto" />
+                <div className="space-y-1">
+                  <h3 className="font-serif font-bold text-white text-base">Nenhum lead comercial registrado ainda</h3>
+                  <p className="text-xs text-luxury-gray-400 max-w-md mx-auto">
+                    Os contatos preenchidos na página de Branded Content aparecerão aqui instantaneamente para acompanhamento da equipe comercial.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-luxury-gray-950 border border-luxury-gray-850 rounded-2xl overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-luxury-gray-300">
+                    <thead className="bg-luxury-gray-900 font-mono uppercase text-[10px] text-gold-400 tracking-wider border-b border-luxury-gray-850">
+                      <tr>
+                        <th className="p-4">Data / Hora</th>
+                        <th className="p-4">Empresa / Responsável</th>
+                        <th className="p-4">Contato (WhatsApp / E-mail)</th>
+                        <th className="p-4">Segmento / Abrangência</th>
+                        <th className="p-4">Demanda</th>
+                        <th className="p-4 text-right">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-luxury-gray-900">
+                      {brandedLeads.map(lead => (
+                        <tr key={lead.id} className="hover:bg-luxury-gray-900/50 transition">
+                          <td className="p-4 font-mono text-[11px] text-luxury-gray-400">
+                            {new Date(lead.createdAt).toLocaleString('pt-BR')}
+                          </td>
+                          <td className="p-4">
+                            <span className="font-bold text-white block text-sm">{lead.companyName}</span>
+                            <span className="text-luxury-gray-400 text-xs">{lead.responsibleName}</span>
+                            {lead.instagram && (
+                              <span className="text-[10px] text-gold-400 font-mono block mt-0.5">{lead.instagram}</span>
+                            )}
+                          </td>
+                          <td className="p-4 space-y-1">
+                            <div className="font-mono text-white text-xs">{lead.whatsapp}</div>
+                            <div className="text-luxury-gray-400 text-[11px]">{lead.email}</div>
+                          </td>
+                          <td className="p-4 space-y-1">
+                            <span className="bg-luxury-gray-900 border border-luxury-gray-850 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-gold-400 block w-max">
+                              {lead.segment}
+                            </span>
+                            <span className="text-[11px] text-luxury-gray-400 block">Abrangência: {lead.scope}</span>
+                          </td>
+                          <td className="p-4 max-w-xs">
+                            <p className="text-xs text-luxury-gray-300 line-clamp-3 font-sans">
+                              {lead.demand}
+                            </p>
+                            <span className="text-[9px] text-emerald-400 font-mono block mt-1">
+                              ✓ Privacidade Aceita ({new Date(lead.privacyTimestamp).toLocaleTimeString('pt-BR')})
+                            </span>
+                          </td>
+                          <td className="p-4 text-right">
+                            <a
+                              href={`https://wa.me/${lead.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá ${lead.responsibleName}, recebemos sua solicitação para a ${lead.companyName} no Além do Bilhão. Vamos agendar a reunião estratégica?`)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded text-[11px] uppercase tracking-wider transition shadow"
+                            >
+                              <span>WhatsApp</span>
+                              <ExternalLink size={12} />
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>

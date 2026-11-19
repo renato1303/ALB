@@ -110,13 +110,14 @@ export async function syncFromSupabase(): Promise<{ status: string; message?: st
 
 // Auto initialisation of database tables
 export function initDB() {
-  // One-time forced reset of posts, comments, and media to give a clean slate as requested
-  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v8')) {
+  // One-time forced reset of posts, comments, media, and users to ensure only José Lins and Allan Lucas are present
+  if (!localStorage.getItem('ab_db_force_reset_clean_slate_v9')) {
     localStorage.setItem(KEYS.POSTS, JSON.stringify(INITIAL_POSTS));
+    localStorage.setItem(KEYS.USERS, JSON.stringify(INITIAL_USERS));
     localStorage.setItem(KEYS.COMMENTS, JSON.stringify([]));
     localStorage.setItem(KEYS.MEDIA, JSON.stringify(INITIAL_MEDIA));
     localStorage.setItem(KEYS.REELS, JSON.stringify(INITIAL_INSTAGRAM_REELS));
-    localStorage.setItem('ab_db_force_reset_clean_slate_v8', 'true');
+    localStorage.setItem('ab_db_force_reset_clean_slate_v9', 'true');
   }
 
   // Force pre-logged admin clear once to ensure guest view is active by default
@@ -653,4 +654,45 @@ export function handleImageError(e: any) {
   // Remove referrerpolicy attribute to bypass any restrictions
   target.removeAttribute('referrerpolicy');
 }
+
+// === BRANDED CONTENT LEADS ===
+export interface BrandedLead {
+  id: string;
+  createdAt: string;
+  companyName: string;
+  responsibleName: string;
+  whatsapp: string;
+  email: string;
+  instagram?: string;
+  segment: string;
+  scope: string;
+  demand: string;
+  privacyConsent: boolean;
+  privacyTimestamp: string;
+  origin: string;
+}
+
+export const KEYS_LEADS = 'ab_db_branded_leads';
+
+export function saveBrandedLead(lead: Omit<BrandedLead, 'id' | 'createdAt'>): BrandedLead {
+  const leads = getBrandedLeads();
+  const newLead: BrandedLead = {
+    ...lead,
+    id: 'lead_' + Math.random().toString(36).substr(2, 9),
+    createdAt: new Date().toISOString()
+  };
+  leads.unshift(newLead);
+  localStorage.setItem(KEYS_LEADS, JSON.stringify(leads));
+  return newLead;
+}
+
+export function getBrandedLeads(): BrandedLead[] {
+  try {
+    const data = localStorage.getItem(KEYS_LEADS);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
 

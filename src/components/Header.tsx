@@ -344,6 +344,12 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
             >
               Opinião
             </li>
+            <li 
+              onClick={() => onNavigate('branded-content')}
+              className={`hover:text-gold-400 text-gold-400 font-bold transition cursor-pointer py-1 ${activeView === 'branded-content' ? 'border-b-2 border-gold-500' : ''}`}
+            >
+              Branded Content
+            </li>
           </ul>
         </div>
       </nav>
@@ -382,6 +388,12 @@ export default function Header({ onNavigate, activeView, activeCategorySlug, onS
                 {cat.name}
               </span>
             ))}
+            <span 
+              onClick={() => { onNavigate('branded-content'); setMobileMenuOpen(false); }}
+              className={`hover:text-gold-400 cursor-pointer text-gold-400 font-bold ${activeView === 'branded-content' ? 'text-gold-400' : ''}`}
+            >
+              Branded Content
+            </span>
           </div>
 
           <hr className="border-luxury-gray-850" />

@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ArticleView from './components/ArticleView';
 import AdminPanel from './components/AdminPanel';
+import BrandedContentPage from './components/BrandedContentPage';
 import { ColumnistsSection } from './components/ColumnistsSection';
 import { InstagramReelsSection } from './components/InstagramReelsSection';
 import { EditorialAttachedFeed } from './components/EditorialAttachedFeed';
@@ -69,6 +70,8 @@ export default function App() {
         } else {
           setView('admin-login');
         }
+      } else if (path === '/branded-content' || hStr === '#/branded-content' || hStr === '#branded-content') {
+        setView('branded-content');
       } else if (path.startsWith('/category/')) {
         const slug = path.replace('/category/', '');
         setView('category');
@@ -124,6 +127,8 @@ export default function App() {
     let targetPath = '/';
     if (newView === 'admin-dashboard' || newView === 'admin-login') {
       targetPath = '/admin';
+    } else if (newView === 'branded-content') {
+      targetPath = '/branded-content';
     } else if (newView === 'category' && param) {
       targetPath = `/category/${param}`;
     } else if (newView === 'article' && param) {
@@ -323,6 +328,35 @@ export default function App() {
               getPostCategoryName={getPostCategoryName} 
               formatDateStr={formatDateStr} 
             />
+
+            {/* BRANDED CONTENT HOMEPAGE PROMOTIONAL SECTION */}
+            <div className="bg-gradient-to-r from-luxury-gray-900 via-luxury-gray-950 to-luxury-gray-900 border border-gold-500/30 rounded-2xl p-8 md:p-12 relative overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="max-w-3xl space-y-4 relative z-10">
+                <div className="inline-flex items-center gap-2 bg-luxury-gray-850 border border-gold-500/30 px-3 py-1 rounded-full">
+                  <Sparkles size={12} className="text-gold-400" />
+                  <span className="text-[10px] font-mono tracking-widest text-gold-400 uppercase font-bold">Publicidade & Parcerias</span>
+                </div>
+                <h3 className="font-serif font-black text-2xl md:text-3xl text-white tracking-tight">
+                  Crie sua campanha de Branded Content com o Além do Bilhão.
+                </h3>
+                <p className="text-sm md:text-base text-luxury-gray-300 leading-relaxed font-sans">
+                  Conectamos marcas a uma audiência interessada em negócios, inovação, economia e capital, através de campanhas personalizadas que combinam conteúdo, estratégia e distribuição.
+                </p>
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      console.log('[Analytics] Homepage Branded Content CTA clicked');
+                      handleNavigate('branded-content');
+                    }}
+                    className="bg-gold-500 hover:bg-gold-600 text-luxury-gray-950 font-bold px-8 py-3.5 rounded text-xs md:text-sm uppercase tracking-wider transition duration-300 shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 cursor-pointer"
+                  >
+                    <span>Desenvolver Minha Campanha</span>
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
 
             {/* 2. THE CUSTOM THREE-COLUMN EDITORIAL PANELS (Esquerda | Meio | Direita) */}
             {(finalLeft.length > 0 || finalCenter.length > 0 || finalRight.length > 0) && (
@@ -662,6 +696,11 @@ export default function App() {
               </div>
             )}
           </div>
+        )}
+
+        {/* VIEW D: BRANDED CONTENT PAGE */}
+        {view === 'branded-content' && (
+          <BrandedContentPage onNavigate={handleNavigate} />
         )}
 
         {/* VIEW C: FULL EDITORIAL ARTICLE DISCOVERY CONTAINER */}
