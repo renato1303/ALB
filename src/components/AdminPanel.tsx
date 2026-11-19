@@ -985,50 +985,69 @@ export default function AdminPanel({ onNavigate, initialTab = 'dashboard' }: Adm
               </div>
             </div>
 
-            {/* RECHARTS INTERACTIVE CHARTS PANEL */}
+            {/* REAL DATA ACTIVITY & LEADS PANEL (Replacing simulated charts) */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
               
-              {/* ACCESSIBILITY AREA CHART */}
-              <div className="lg:col-span-8 bg-luxury-gray-900 p-5 rounded-xl border border-luxury-gray-850 shadow">
-                <div className="flex items-center gap-2 mb-4 justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <TrendingUp size={16} className="text-gold-500" />
-                    <h3 className="font-serif font-black text-sm text-white uppercase tracking-wider">Histórico de Visualizações de Página</h3>
+              {/* REAL LEADS TABLE PREVIEW */}
+              <div className="lg:col-span-7 bg-luxury-gray-900 p-5 rounded-xl border border-luxury-gray-850 shadow space-y-4">
+                <div className="flex items-center justify-between border-b border-luxury-gray-850 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Target size={16} className="text-gold-500" />
+                    <h3 className="font-serif font-black text-sm text-white uppercase tracking-wider">Leads Reais de Branded Content</h3>
                   </div>
-                  <span className="text-[10px] font-mono text-luxury-gray-400">Dados dos últimos 10 dias</span>
+                  <span className="text-[10px] font-mono text-gold-400 bg-luxury-gray-950 px-2 py-0.5 rounded border border-luxury-gray-850">
+                    {brandedLeads.length} total
+                  </span>
                 </div>
-                <div className="h-72 w-full text-xs">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorPageviews" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#c28b2e" stopOpacity={0.4}/>
-                          <stop offset="95%" stopColor="#c28b2e" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#292524" />
-                      <XAxis dataKey="date" stroke="#78716c" />
-                      <YAxis stroke="#78716c" />
-                      <Tooltip contentStyle={{ backgroundColor: '#1c1917', borderColor: '#3e3a38', color: '#fff' }} />
-                      <Area type="monotone" dataKey="pageviews" stroke="#c28b2e" strokeWidth={2} fillOpacity={1} fill="url(#colorPageviews)" name="Visualizações" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+
+                {brandedLeads.length === 0 ? (
+                  <p className="text-xs text-luxury-gray-400 italic py-6 text-center">Nenhum lead comercial capturado ainda. Preencha o formulário na página de Branded Content para testar.</p>
+                ) : (
+                  <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                    {brandedLeads.slice(0, 5).map(lead => (
+                      <div key={lead.id} className="bg-luxury-gray-950/60 p-3 rounded-lg border border-luxury-gray-850 flex items-center justify-between gap-3 text-xs">
+                        <div>
+                          <span className="font-bold text-white block">{lead.companyName}</span>
+                          <span className="text-[11px] text-luxury-gray-400">{lead.responsibleName} • {lead.whatsapp}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="bg-gold-500/10 text-gold-400 border border-gold-500/20 px-2 py-0.5 rounded text-[10px] font-mono font-bold block w-max ml-auto">
+                            {lead.segment}
+                          </span>
+                          <span className="text-[10px] text-luxury-gray-500 font-mono block mt-1">
+                            {new Date(lead.createdAt).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* POSTS POPULARITY RANKING BAR CHART */}
-              <div className="lg:col-span-4 bg-luxury-gray-900 p-5 rounded-xl border border-luxury-gray-850 shadow">
-                <h3 className="font-serif font-black text-sm text-white uppercase tracking-wider mb-4">Relatório de Desempenho</h3>
-                <div className="h-72 w-full text-[10px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={posts.slice(0, 4).map(p=>({ name: p.title.substring(0, 15)+'...', 'Views': p.views }))} margin={{ top: 1, right: 1, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#292524" />
-                      <XAxis dataKey="name" stroke="#78716c" />
-                      <YAxis stroke="#78716c" />
-                      <Tooltip contentStyle={{ backgroundColor: '#1c1917', borderColor: '#3e3a38', color: '#fff' }} />
-                      <Bar dataKey="Views" fill="#d4af37" radius={[4, 4, 0, 0]} name="Acessos" />
-                    </BarChart>
-                  </ResponsiveContainer>
+              {/* REAL ARTICLES STATUS PANEL */}
+              <div className="lg:col-span-5 bg-luxury-gray-900 p-5 rounded-xl border border-luxury-gray-850 shadow space-y-4">
+                <div className="flex items-center justify-between border-b border-luxury-gray-850 pb-3">
+                  <div className="flex items-center gap-2">
+                    <FileText size={16} className="text-gold-500" />
+                    <h3 className="font-serif font-black text-sm text-white uppercase tracking-wider">Status Editorial Real</h3>
+                  </div>
+                  <span className="text-[10px] font-mono text-luxury-gray-400">Publicações e Rascunhos</span>
+                </div>
+
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                  {posts.slice(0, 5).map(post => (
+                    <div key={post.id} className="bg-luxury-gray-950/60 p-3 rounded-lg border border-luxury-gray-850 flex items-center justify-between gap-3 text-xs">
+                      <div className="truncate flex-1">
+                        <span className="font-bold text-white block truncate">{post.title}</span>
+                        <span className="text-[10px] text-luxury-gray-400 font-mono">Leitura: {post.readingTime} min</span>
+                      </div>
+                      <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-wider shrink-0 ${
+                        post.status === 'published' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                      }`}>
+                        {post.status === 'published' ? 'Publicado' : 'Rascunho'}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
