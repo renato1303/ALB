@@ -394,7 +394,15 @@ export function saveTag(tagName: string): Tag {
 
 // === USERS ===
 export function getUsers(): User[] {
-  return getTable<User>(KEYS.USERS);
+  const users = getTable<User>(KEYS.USERS);
+  const adminEmail = 'contatoalemdobilhao@gmail.com';
+  const hasAdmin = users.some(u => u.email.toLowerCase() === adminEmail.toLowerCase());
+  if (!hasAdmin) {
+    const freshUsers = [...INITIAL_USERS];
+    saveTable(KEYS.USERS, freshUsers);
+    return freshUsers;
+  }
+  return users;
 }
 
 export function getUserById(id: string): User | undefined {
